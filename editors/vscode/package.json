@@ -73,6 +73,16 @@
         "embeddedLanguages": {
           "source.braceml": "braceml"
         }
+      },
+      {
+        "scopeName": "braceml.markdown.injection",
+        "path": "./syntaxes/braceml-markdown.injection.json",
+        "injectTo": [
+          "text.html.markdown"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.braceml": "braceml"
+        }
       }
     ],
     "snippets": [

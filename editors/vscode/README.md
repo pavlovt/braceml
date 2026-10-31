@@ -4,7 +4,7 @@ Language support for [BraceML](https://github.com/pavlovt/braceml) in VS Code 1.
 
 - Works in `.braceml` files and `<template lang="braceml">` blocks inside `.svelte` files
 - Works in `` braceml`…` `` templates in `.jsx` and `.tsx` files
-- Syntax highlighting
+- Syntax highlighting, including ```` ```braceml ```` code blocks in Markdown files
 - Errors while you type, plus warnings for code that compiles but doesn't do what it looks like
 - Completion for elements, blocks, `@` tags, attributes, directives and imported components
 - Hover help for block keywords and `@` tags

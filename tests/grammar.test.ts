@@ -82,7 +82,50 @@ async function tokenizeTsx(lines: string[]) {
   return out;
 }
 
+async function tokenizeMarkdown(lines: string[]) {
+  await oniguruma.loadWASM(readFileSync(require.resolve('vscode-oniguruma/release/onig.wasm')).buffer).catch(() => {});
+  const url = new URL('../editors/vscode/syntaxes/braceml-markdown.injection.json', import.meta.url);
+  const sources: Record<string, unknown> = {
+    'source.braceml': vsctm.parseRawGrammar(readFileSync(grammarPath, 'utf8'), grammarPath.pathname),
+    'source.js': JS_STUB,
+    'text.html.markdown': vsctm.parseRawGrammar(
+      JSON.stringify({ scopeName: 'text.html.markdown', patterns: [{ match: '\\bplain\\b', name: 'markup.plain' }] }),
+      'md.json',
+    ),
+    'braceml.markdown.injection': vsctm.parseRawGrammar(readFileSync(url, 'utf8'), url.pathname),
+  };
+  const registry = new vsctm.Registry({
+    onigLib: Promise.resolve({
+      createOnigScanner: (s: string[]) => new oniguruma.OnigScanner(s),
+      createOnigString: (s: string) => new oniguruma.OnigString(s),
+    }),
+    loadGrammar: async (scope: string) => (sources[scope] ?? null) as never,
+    getInjections: (scope: string) => (scope === 'text.html.markdown' ? ['braceml.markdown.injection'] : []),
+  });
+  const grammar = (await registry.loadGrammar('text.html.markdown'))!;
+  let state = vsctm.INITIAL;
+  const out: [string, string][] = [];
+  for (const line of lines) {
+    const r = grammar.tokenizeLine(line, state);
+    for (const t of r.tokens) {
+      const text = line.slice(t.startIndex, t.endIndex);
+      if (text.trim()) out.push([text.trim(), t.scopes[t.scopes.length - 1]]);
+    }
+    state = r.ruleStack;
+  }
+  return out;
+}
+
 describe('TextMate grammar', () => {
+  it('highlights braceml code blocks in Markdown', async () => {
+    const tokens = await tokenizeMarkdown(['plain', '```braceml', 'if open {', "  p 'Hi'", '}', '```', 'if plain']);
+    const scopesOf = (text: string) => tokens.filter(([t]) => t === text).map(([, s]) => s);
+    expect(scopesOf('p')).toEqual(['entity.name.tag.braceml']);
+    expect(tokens.find(([t]) => t === 'if')?.[1]).toBe('keyword.control.flow.braceml');
+    // the block ends at the closing fence
+    expect(scopesOf('plain')).toEqual(['markup.plain', 'markup.plain']);
+  });
+
   it('highlights braceml templates in JSX and TSX files', async () => {
     const tokens = await tokenizeTsx(['return braceml`', '  if open {', "    p 'Hi'", '  }', '`;', 'return x;']);
     const scopesOf = (text: string) => tokens.filter(([t]) => t === text).map(([, s]) => s);
