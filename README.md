@@ -78,6 +78,9 @@ export default {
 See the [Svelte guide](docs/svelte.md) for setup, syntax and troubleshooting, and
 [examples/sveltekit](examples/sveltekit) for a complete app.
 
+For a larger example, [brace-store](https://github.com/pavlovt/brace-store) is a SvelteKit
+storefront built twice, in BraceML and in HTML, so you can compare the two side by side.
+
 ## Command line
 
 ```sh
