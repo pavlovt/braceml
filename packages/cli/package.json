@@ -36,6 +36,7 @@
   "dependencies": {
     "@braceml/core": "workspace:^",
     "@braceml/html": "workspace:^",
+    "@braceml/react": "workspace:^",
     "@braceml/svelte": "workspace:^"
   },
   "publishConfig": {

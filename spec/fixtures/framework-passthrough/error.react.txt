@@ -1,0 +1,1 @@
+'@click' is not a valid attribute in the 'react' target

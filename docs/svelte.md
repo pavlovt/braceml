@@ -87,7 +87,7 @@ turning it off loses nothing in those files. It does also turn off type errors i
 
 ## Writing components
 
-The [language specification](../spec/SPEC.md) covers the full syntax. This section covers
+The [language reference](language.md) covers the full syntax. This section covers
 what you'll use most in Svelte.
 
 ### Elements, text and expressions

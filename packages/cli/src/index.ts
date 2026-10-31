@@ -3,15 +3,16 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 import { BraceMLError } from '@braceml/core';
 import { compileHtml } from '@braceml/html';
+import { compileReact } from '@braceml/react/compiler';
 import { compileSvelte } from '@braceml/svelte';
 
 const HELP = `Usage: braceml <file.braceml> [options]
 
 Options:
-  -t, --target <html|svelte>   Output target (default: html)
-  -o, --out <file>             Write to a file instead of stdout
-  -h, --help                   Show this help
-  -v, --version                Show the version
+  -t, --target <html|svelte|react>   Output target (default: html)
+  -o, --out <file>                   Write to a file instead of stdout
+  -h, --help                         Show this help
+  -v, --version                      Show the version
 `;
 
 const { values, positionals } = parseArgs({
@@ -35,10 +36,10 @@ if (values.help || positionals.length !== 1) {
 }
 
 const file = positionals[0];
-const compilers = { html: compileHtml, svelte: compileSvelte } as const;
+const compilers = { html: compileHtml, svelte: compileSvelte, react: compileReact } as const;
 const target = values.target as keyof typeof compilers;
 if (!(target in compilers)) {
-  console.error(`Unknown target '${values.target}'. Use html or svelte.`);
+  console.error(`Unknown target '${values.target}'. Use html, svelte or react.`);
   process.exit(1);
 }
 

@@ -1,0 +1,13 @@
+<>
+  <ul className="nav">
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a className="active" href="/about">About</a>
+    </li>
+  </ul>
+  <label htmlFor="email">Don't forget</label>
+  <input id="email" className="form-control" type="email" required />
+  <br />
+</>

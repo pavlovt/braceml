@@ -2,12 +2,14 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { transformSync } from 'esbuild';
 import { compile as svelteCompile } from 'svelte/compiler';
 import { compileHtml } from '@braceml/html';
+import { compileReact } from '@braceml/react/compiler';
 import { compileSvelte } from '@braceml/svelte';
 
 const root = fileURLToPath(new URL('../spec/fixtures/', import.meta.url));
-const targets = { html: compileHtml, svelte: compileSvelte };
+const targets = { html: compileHtml, svelte: compileSvelte, react: compileReact };
 
 describe.each(readdirSync(root))('fixture %s', (name) => {
   const dir = join(root, name);
@@ -39,6 +41,13 @@ describe.each(readdirSync(root))('fixture %s', (name) => {
       const script = existsSync(scriptFile) ? readFileSync(scriptFile, 'utf8') : '';
       const component = `<script>${script}</script>\n${markup}`;
       expect(() => svelteCompile(component, { filename: `${name}.svelte` })).not.toThrow();
+    });
+  }
+
+  const reactOut = join(dir, 'expected.react');
+  if (existsSync(reactOut)) {
+    it('react: output is valid JSX', () => {
+      expect(() => transformSync(readFileSync(reactOut, 'utf8'), { loader: 'jsx' })).not.toThrow();
     });
   }
 });

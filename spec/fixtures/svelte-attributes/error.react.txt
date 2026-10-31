@@ -1,0 +1,1 @@
+'bind:value' is not supported by the 'react' target. Use a value prop and an onChange handler

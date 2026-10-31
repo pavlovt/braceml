@@ -21,6 +21,15 @@
       ],
       "@braceml/svelte": [
         "./packages/svelte/src/index.ts"
+      ],
+      "@braceml/react": [
+        "./packages/react/src/index.ts"
+      ],
+      "@braceml/react/compiler": [
+        "./packages/react/src/compiler.ts"
+      ],
+      "@braceml/react/vite": [
+        "./packages/react/src/vite.ts"
       ]
     }
   },

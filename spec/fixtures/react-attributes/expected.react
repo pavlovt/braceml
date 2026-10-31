@@ -1,0 +1,10 @@
+<form id="signup" className="card wide" onSubmit={save} onDoubleClick={zoom}>
+  <label className={`muted ${tone}`} htmlFor="email">Email</label>
+  <input id="email" className={[failed && 'error'].filter(Boolean).join(' ')} style={{ color: 'red', '--gap': '2px', width: `${width}px` }} tabIndex="1" maxLength="40" readOnly ref={field} data-kind="a" {...rest} />
+  <a className={linkClass} href={`/users/${user.id}`}>Profile</a>
+  <svg viewBox="0 0 10 10">
+    <path strokeWidth="2" d="M0 0"></path>
+  </svg>
+  <my-chart some-option="1"></my-chart>
+  <Card className="big" onclick={open} title="Hi" />
+</form>

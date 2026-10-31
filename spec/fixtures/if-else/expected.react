@@ -1,0 +1,7 @@
+loading ? (
+  <Spinner size="sm" />
+) : users.length == 0 ? (
+  <p className="muted">No users</p>
+) : (
+  <p>{users.length} users</p>
+)

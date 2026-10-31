@@ -1,14 +1,14 @@
 # Working on this repo
 
 - `pnpm test` runs everything; `pnpm fixtures:update` regenerates spec/fixtures expected outputs (review the diff).
-- Language changes: update spec/SPEC.md, add a fixture, then the parser in packages/core/src/parser.ts.
+- Language changes: update docs/language.md, add a fixture, then the parser in packages/core/src/parser.ts.
 - Targets print the AST; html and svelte share packages/core/src/printer.ts.
 - Keep docs/llms.txt in sync with the spec.
 
 # BraceML — reference for AI assistants
 
 > BraceML is a brace-based HTML template language. `{ }` wraps an element's children.
-> Text is always quoted. It compiles to HTML and to Svelte 5. Full spec: spec/SPEC.md
+> Text is always quoted. It compiles to HTML, Svelte 5 and React. Full spec: docs/language.md
 
 ## Rules
 
@@ -63,6 +63,26 @@
   }
 </template>
 ```
+
+## In a .jsx or .tsx file
+
+```tsx
+import { braceml } from '@braceml/react';
+
+export function Users({ users }) {
+  return braceml`
+    ul {
+      each users as user (user.id) {
+        li '{user.name}'
+      }
+    }
+  `;
+}
+```
+
+Needs `braceml()` from `@braceml/react/vite` before `react()` in the Vite config. Write
+`{x}`, never `${x}`. `class` and `onclick` are converted for HTML elements. On a component,
+write `onClick`. `bind:value` is an error: use `value={v} onchange={fn}`.
 
 ## Common mistakes
 

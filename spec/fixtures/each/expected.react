@@ -1,0 +1,7 @@
+<ul>
+  {users.length > 0 ? users.map((user, i) => (
+    <li key={user.id} className={[user.selected && 'active'].filter(Boolean).join(' ')}>{i + 1}. {user.name}</li>
+  )) : (
+    <li>Empty</li>
+  )}
+</ul>

@@ -24,3 +24,5 @@ jobs:
       - run: pnpm test
       - name: Build SvelteKit example
         run: pnpm --filter braceml-example-sveltekit build
+      - name: Build React example
+        run: pnpm --filter braceml-example-react build

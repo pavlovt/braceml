@@ -2,7 +2,7 @@
 
 **HTML templates without the boilerplate.** BraceML is a brace-based template language.
 `{ }` wraps an element's children, the way SCSS wraps CSS rules. It compiles to plain
-HTML and to Svelte 5, and a React target is planned.
+HTML, Svelte 5 and React.
 
 ```braceml
 form onsubmit={save} {
@@ -46,6 +46,7 @@ roughly what Sass is to SCSS.
 | [`@braceml/core`](packages/core) | Parser, AST and error reporting |
 | [`@braceml/html`](packages/html) | Compile to plain HTML (also works for Vue/Angular templates) |
 | [`@braceml/svelte`](packages/svelte) | Svelte 5 / SvelteKit preprocessor |
+| [`@braceml/react`](packages/react) | React templates, compiled to JSX by a Vite plugin |
 | [`@braceml/cli`](packages/cli) | Command-line compiler |
 | [`@braceml/language-server`](packages/language-server) | Diagnostics, completion and hover for any LSP editor |
 | [VS Code extension](editors/vscode) | Highlighting, snippets and the language server, including inside `.svelte` files |
@@ -82,6 +83,36 @@ See the [Svelte guide](docs/svelte.md) for setup, syntax and troubleshooting, an
 For a larger example, [brace-store](https://github.com/pavlovt/brace-store) is a SvelteKit
 storefront built twice, in BraceML and in HTML, so you can compare the two side by side.
 
+## Use with React
+
+```sh
+npm i @braceml/react
+```
+
+```js
+// vite.config.js
+import react from '@vitejs/plugin-react';
+import { braceml } from '@braceml/react/vite';
+
+export default {
+  plugins: [braceml(), react()],
+};
+```
+
+```tsx
+import { useState } from 'react';
+import { braceml } from '@braceml/react';
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+  return braceml`
+    button onclick={() => setCount(count + 1)} 'Clicked {count} times'
+  `;
+}
+```
+
+See the [React guide](docs/react.md) and [examples/react](examples/react).
+
 ## Command line
 
 ```sh
@@ -91,8 +122,9 @@ npx @braceml/cli page.braceml -t svelte -o page.svelte
 
 ## Documentation
 
-- [Language specification](spec/SPEC.md)
+- [Language guide and reference](docs/language.md)
 - [Using BraceML with Svelte](docs/svelte.md)
+- [Using BraceML with React](docs/react.md)
 - [Guide for AI assistants](docs/llms.txt)
 
 ## Roadmap
@@ -107,7 +139,8 @@ npx @braceml/cli page.braceml -t svelte -o page.svelte
 - [ ] Source maps
 - [ ] Prettier plugin
 - [ ] Online playground
-- [ ] React target
+- [x] React target
+- [ ] Editor support in `.jsx` and `.tsx` templates
 
 ## Development
 

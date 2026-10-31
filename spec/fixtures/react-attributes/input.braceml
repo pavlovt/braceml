@@ -1,0 +1,18 @@
+form#signup.card.wide onsubmit={save} ondblclick={zoom} {
+  label for=email class="muted {tone}" 'Email'
+  input#email(
+    tabindex=1
+    maxlength="40"
+    readonly
+    bind:this={field}
+    class:error={failed}
+    style="color: red; --gap: 2px"
+    style:width="{width}px"
+    data-kind="a"
+    {...rest}
+  )
+  a href="/users/{user.id}" class={linkClass} 'Profile'
+  svg viewBox="0 0 10 10" > path stroke-width=2 d="M0 0"
+  my-chart some-option=1
+  Card class="big" onclick={open} title="Hi"
+}

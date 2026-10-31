@@ -1,0 +1,46 @@
+snippet row(user) {
+  td '{user.name}'
+}
+@const total = rows.length
+.list {
+  h2 'Rows: {total}'
+  each rows as item {
+    @render row(item)
+  }
+  each rows as row, i (row.id) {
+    dt '{i}'
+    dd '{row.name}'
+  } else {
+    p 'Empty'
+  }
+  each rows.filter(Boolean) as [id, name] (id) {
+    @const label = name.trim()
+    li '{label}'
+  }
+  if open {
+    'Hello '
+    strong '{name}'
+    ' there'
+  }
+  key route {
+    Page
+  }
+  article { @html post.body }
+  Table rows={rows} {
+    snippet header(col) {
+      th '{col}'
+    }
+    p 'Footer'
+  }
+  await load() {
+    p 'Loading'
+  } then data {
+    @const n = data.length
+    p '{n}'
+  } catch err {
+    p '{err.message}'
+  }
+  @render children?.()
+  @debug total
+  /* note */
+}

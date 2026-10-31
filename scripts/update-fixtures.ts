@@ -5,11 +5,13 @@
  */
 import { readdirSync, readFileSync, writeFileSync, existsSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { compileHtml } from '../packages/html/src/index.ts';
+import { compileReact } from '../packages/react/src/compiler.ts';
 import { compileSvelte } from '../packages/svelte/src/index.ts';
 
-const root = new URL('../spec/fixtures/', import.meta.url).pathname;
-const targets = { html: compileHtml, svelte: compileSvelte };
+const root = fileURLToPath(new URL('../spec/fixtures/', import.meta.url));
+const targets = { html: compileHtml, svelte: compileSvelte, react: compileReact };
 
 for (const name of readdirSync(root)) {
   const dir = join(root, name);

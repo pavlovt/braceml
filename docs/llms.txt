@@ -1,7 +1,7 @@
 # BraceML — reference for AI assistants
 
 > BraceML is a brace-based HTML template language. `{ }` wraps an element's children.
-> Text is always quoted. It compiles to HTML and to Svelte 5. Full spec: spec/SPEC.md
+> Text is always quoted. It compiles to HTML, Svelte 5 and React. Full spec: docs/language.md
 
 ## Rules
 
@@ -56,6 +56,26 @@
   }
 </template>
 ```
+
+## In a .jsx or .tsx file
+
+```tsx
+import { braceml } from '@braceml/react';
+
+export function Users({ users }) {
+  return braceml`
+    ul {
+      each users as user (user.id) {
+        li '{user.name}'
+      }
+    }
+  `;
+}
+```
+
+Needs `braceml()` from `@braceml/react/vite` before `react()` in the Vite config. Write
+`{x}`, never `${x}`. `class` and `onclick` are converted for HTML elements. On a component,
+write `onClick`. `bind:value` is an error: use `value={v} onchange={fn}`.
 
 ## Common mistakes
 

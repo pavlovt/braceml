@@ -1,0 +1,69 @@
+import { Fragment } from 'react';
+import { Await } from '@braceml/react';
+
+(() => {
+  const row = (user) => (
+    <td>{user.name}</td>
+  );
+  const total = rows.length;
+  return (
+    <div className="list">
+      <h2>Rows: {total}</h2>
+      {rows.map((item, $index) => (
+        <Fragment key={$index}>
+          {row(item)}
+        </Fragment>
+      ))}
+      {rows.length > 0 ? rows.map((row, i) => (
+        <Fragment key={row.id}>
+          <dt>{i}</dt>
+          <dd>{row.name}</dd>
+        </Fragment>
+      )) : (
+        <p>Empty</p>
+      )}
+      {(rows.filter(Boolean)).map(([id, name]) => {
+        const label = name.trim();
+        return (
+          <li key={id}>{label}</li>
+        );
+      })}
+      {open ? (
+        <>
+          Hello{' '}
+          <strong>{name}</strong>
+          {' '}there
+        </>
+      ) : null}
+      <Fragment key={route}>
+        <Page />
+      </Fragment>
+      <article dangerouslySetInnerHTML={{ __html: post.body }} />
+      <Table rows={rows}
+        header={(col) => (
+          <th>{col}</th>
+        )}
+      >
+        <p>Footer</p>
+      </Table>
+      <Await
+        promise={load()}
+        pending={
+          <p>Loading</p>
+        }
+        resolved={(data) => {
+          const n = data.length;
+          return (
+            <p>{n}</p>
+          );
+        }}
+        rejected={(err) => (
+          <p>{err.message}</p>
+        )}
+      />
+      {children}
+      {console.log({ total })}
+      {/* note */}
+    </div>
+  );
+})()

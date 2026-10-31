@@ -1,0 +1,39 @@
+import { Fragment } from 'react';
+import { Await } from '@braceml/react';
+
+(() => {
+  const row = (user) => (
+    <td>
+      <a href={`/users/${user.id}`}>{user.name}</a>
+    </td>
+  );
+  return (
+    <>
+      <Await
+        promise={load()}
+        pending={
+          <p>Loading…</p>
+        }
+        resolved={(data) => {
+          const total = data.items.length;
+          return (
+            <p>{total} items</p>
+          );
+        }}
+        rejected={(err) => (
+          <p className="error">{err.message}</p>
+        )}
+      />
+      <Fragment key={route}>
+        <Page />
+      </Fragment>
+      <table>
+        <tbody>
+          <tr>
+            {row(me)}
+          </tr>
+        </tbody>
+      </table>
+    </>
+  );
+})()

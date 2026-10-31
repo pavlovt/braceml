@@ -1,0 +1,67 @@
+{
+  "name": "@braceml/react",
+  "version": "0.2.0",
+  "description": "Write React components with BraceML templates",
+  "keywords": [
+    "braceml",
+    "template",
+    "html",
+    "template-language",
+    "react",
+    "jsx",
+    "vite-plugin"
+  ],
+  "license": "MIT",
+  "author": "pavlovt",
+  "homepage": "https://github.com/pavlovt/braceml#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavlovt/braceml.git",
+    "directory": "packages/react"
+  },
+  "bugs": "https://github.com/pavlovt/braceml/issues",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./compiler": {
+      "types": "./dist/compiler.d.ts",
+      "import": "./dist/compiler.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js"
+    }
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@babel/parser": "^7.26.0",
+    "@braceml/core": "workspace:^",
+    "magic-string": "^0.30.0"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
