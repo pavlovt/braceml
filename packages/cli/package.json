@@ -1,5 +1,5 @@
 {
-  "name": "braceml",
+  "name": "@braceml/cli",
   "version": "0.2.0",
   "description": "BraceML - a brace-based HTML template language. Command-line compiler.",
   "keywords": [

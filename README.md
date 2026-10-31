@@ -46,7 +46,7 @@ roughly what Sass is to SCSS.
 | [`@braceml/core`](packages/core) | Parser, AST and error reporting |
 | [`@braceml/html`](packages/html) | Compile to plain HTML (also works for Vue/Angular templates) |
 | [`@braceml/svelte`](packages/svelte) | Svelte 5 / SvelteKit preprocessor |
-| [`braceml`](packages/cli) | Command-line compiler |
+| [`@braceml/cli`](packages/cli) | Command-line compiler |
 | [`@braceml/language-server`](packages/language-server) | Diagnostics, completion and hover for any LSP editor |
 | [VS Code extension](editors/vscode) | Highlighting, snippets and the language server, including inside `.svelte` files |
 
@@ -85,8 +85,8 @@ storefront built twice, in BraceML and in HTML, so you can compare the two side 
 ## Command line
 
 ```sh
-npx braceml page.braceml                # HTML to stdout
-npx braceml page.braceml -t svelte -o page.svelte
+npx @braceml/cli page.braceml                # HTML to stdout
+npx @braceml/cli page.braceml -t svelte -o page.svelte
 ```
 
 ## Documentation

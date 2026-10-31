@@ -35,23 +35,6 @@ You need Svelte 5. These steps are the same for SvelteKit and for plain Svelte w
 npm i -D @braceml/svelte
 ```
 
-> **Not on npm yet.** BraceML 0.1 hasn't been published, so the command above doesn't
-> work yet. Until it does, build the packages from this repo and install the tarballs:
->
-> ```sh
-> git clone https://github.com/pavlovt/braceml.git
-> cd braceml
-> pnpm install
-> pnpm build
-> pnpm --filter @braceml/core --filter @braceml/svelte exec pnpm pack
-> ```
->
-> Then, in your project, install both tarballs:
->
-> ```sh
-> npm i -D ../braceml/packages/core/braceml-core-0.1.0.tgz ../braceml/packages/svelte/braceml-svelte-0.1.0.tgz
-> ```
-
 ### 2. Add it to `svelte.config.js`
 
 ```js
@@ -309,11 +292,11 @@ elements don't need it, because names with a hyphen are always accepted.
 
 ## Compiling without the preprocessor
 
-The `braceml` CLI converts a standalone template file to Svelte markup. The output is
-markup only, so this suits one-off conversion rather than a build step:
+The `@braceml/cli` package converts a standalone template file to Svelte markup. The output
+is markup only, so this suits one-off conversion rather than a build step:
 
 ```sh
-npx braceml page.braceml -t svelte -o page.svelte
+npx @braceml/cli page.braceml -t svelte -o page.svelte
 ```
 
 From code, use `compileSvelte`, which takes the same `indent` and `allowUnknownTags`
