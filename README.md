@@ -75,7 +75,8 @@ export default {
 </template>
 ```
 
-See [examples/sveltekit](examples/sveltekit) for a complete app.
+See the [Svelte guide](docs/svelte.md) for setup, syntax and troubleshooting, and
+[examples/sveltekit](examples/sveltekit) for a complete app.
 
 ## Command line
 
@@ -87,6 +88,7 @@ npx braceml page.braceml -t svelte -o page.svelte
 ## Documentation
 
 - [Language specification](spec/SPEC.md)
+- [Using BraceML with Svelte](docs/svelte.md)
 - [Guide for AI assistants](docs/llms.txt)
 
 ## Roadmap
