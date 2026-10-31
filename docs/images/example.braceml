@@ -1,0 +1,16 @@
+form onsubmit={save} {
+  label for=email 'Email address'
+  input#email.form-control type=email bind:value={email}
+
+  if users.length == 0 {
+    p.muted 'No users yet'
+  } else {
+    ul {
+      each users as user (user.id) {
+        li > a href="/users/{user.id}" '{user.name}'
+      }
+    }
+  }
+
+  button.btn.btn-primary type=submit 'Save'
+}

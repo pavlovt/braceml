@@ -4,6 +4,7 @@
 - Language changes: update docs/language.md, add a fixture, then the parser in packages/core/src/parser.ts.
 - Targets print the AST; html and svelte share packages/core/src/printer.ts.
 - Keep docs/llms.txt in sync with the spec.
+- The image at the top of the README comes from docs/images/example.braceml: run `pnpm readme:image` after changing it.
 
 # BraceML — reference for AI assistants
 

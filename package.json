@@ -8,6 +8,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "fixtures:update": "tsx scripts/update-fixtures.ts",
+    "readme:image": "tsx scripts/render-example.ts",
     "typecheck": "tsc --noEmit",
     "changeset": "changeset",
     "release": "pnpm build && changeset publish"

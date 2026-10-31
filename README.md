@@ -8,24 +8,8 @@ HTML, Svelte 5 and React.
 SvelteKit storefront built twice, in BraceML and in HTML, so you can compare them side by
 side.
 
-```svelte braceml
-form onsubmit={save} {
-  label for=email 'Email address'
-  input#email.form-control type=email bind:value={email}
-
-  if users.length == 0 {
-    p.muted 'No users yet'
-  } else {
-    ul {
-      each users as user (user.id) {
-        li > a href="/users/{user.id}" '{user.name}'
-      }
-    }
-  }
-
-  button.btn.btn-primary type=submit 'Save'
-}
-```
+<img src="docs/images/example-dark.svg#gh-dark-mode-only" alt="A BraceML form with syntax highlighting, using an if block and an each block">
+<img src="docs/images/example-light.svg#gh-light-mode-only" alt="A BraceML form with syntax highlighting, using an if block and an each block">
 
 ## What is BraceML?
 
