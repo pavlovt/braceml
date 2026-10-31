@@ -225,7 +225,9 @@ button (click)="save()" [disabled]="busy" 'Angular'
 
 | Tool | What it does |
 |------|--------------|
-| [`@braceml/cli`](../packages/cli) | `npx @braceml/cli page.braceml -t html\|svelte\|react -o out` |
+| [`@braceml/cli`](../packages/cli) | Compile, format and convert from the command line |
+| [`@braceml/convert`](../packages/convert) | `htmlToBraceml(html)` |
+| [`@braceml/prettier-plugin`](../packages/prettier-plugin) | Format `.braceml` files with Prettier |
 | [`@braceml/html`](../packages/html) | `compileHtml(source)` |
 | [`@braceml/svelte`](../packages/svelte) | `compileSvelte(source)` and a preprocessor |
 | [`@braceml/react`](../packages/react) | `braceml` tag, `Await`, `compileReact(source)` and a Vite plugin |
@@ -234,6 +236,41 @@ button (click)="save()" [disabled]="busy" 'Angular'
 | [VS Code extension](../editors/vscode) | Highlighting, snippets and the language server |
 
 Every compiler takes `filename`, `indent` and `allowUnknownTags` options.
+
+### Formatting
+
+```sh
+npx @braceml/cli fmt src/App.svelte src/page.braceml
+npx @braceml/cli fmt --check src/App.tsx
+```
+
+`fmt` rewrites files in place, and `--check` lists unformatted files and exits with an
+error, which suits CI. It works on `.braceml` files and on the templates in `.svelte`,
+`.jsx` and `.tsx` files. In VS Code, use Format Document.
+
+The formatter only changes layout. It fixes indentation, puts each child on its own line,
+keeps one blank line where you left one, and moves a head wider than 100 characters to
+`tag(` ... `)`. Attributes, text, expressions and comments stay exactly as written. A `//`
+comment between `}` and `else` moves to the start of the block after it.
+
+### Converting HTML
+
+```sh
+npx @braceml/cli convert page.html -o page.braceml
+```
+
+The converter uses selectors, chains and short bodies where it can. Text mixed with inline
+tags stays one string, which keeps its spacing. Add `--class-attribute` for Tailwind.
+
+It reads plain HTML. Svelte or JSX syntax in the input stays as text, and an element that
+BraceML doesn't know needs the `allowUnknownTags` option to compile.
+
+### Source maps
+
+The Svelte preprocessor and the React Vite plugin both return source maps, so compiler
+errors, stack traces and breakpoints point at your template. Maps are accurate to the
+line and the start of the element, not to a position inside it. The CLI doesn't write
+source maps.
 
 ## Reference
 

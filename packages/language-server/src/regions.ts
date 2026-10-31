@@ -1,3 +1,5 @@
+import { findTemplates } from '@braceml/core';
+import type { FileKind } from '@braceml/core';
 import type { TextDocument } from 'vscode-languageserver-textdocument';
 
 /** A stretch of a document that holds BraceML source. */
@@ -5,18 +7,21 @@ export interface Region {
   /** offset of the first BraceML character in the document */
   start: number;
   source: string;
+  /** the target its code compiles for */
+  target: 'svelte' | 'react';
 }
 
-const TEMPLATE = /<template\b[^>]*\blang=["']braceml["'][^>]*>([\s\S]*?)<\/template>/g;
+export function documentKind(document: TextDocument): FileKind {
+  if (document.languageId === 'svelte') return 'svelte';
+  if (document.languageId === 'javascriptreact' || document.languageId === 'typescriptreact') return 'jsx';
+  return 'braceml';
+}
 
-/** .braceml files are one region; .svelte files have one per `<template lang="braceml">`. */
+/** .braceml files are one region; other files have one per template. */
 export function findRegions(document: TextDocument): Region[] {
-  const text = document.getText();
-  if (document.languageId !== 'svelte') return [{ start: 0, source: text }];
-  return [...text.matchAll(TEMPLATE)].map((m) => ({
-    start: m.index + m[0].indexOf('>') + 1,
-    source: m[1],
-  }));
+  const kind = documentKind(document);
+  const target = kind === 'jsx' ? 'react' : 'svelte';
+  return findTemplates(document.getText(), kind).map((region) => ({ ...region, target }));
 }
 
 export function regionAt(document: TextDocument, offset: number): Region | undefined {

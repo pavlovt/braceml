@@ -7,7 +7,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@braceml/core': pkg('core'),
+      '@braceml/convert': pkg('convert'),
       '@braceml/html': pkg('html'),
+      '@braceml/prettier-plugin': pkg('prettier-plugin'),
       '@braceml/svelte': pkg('svelte'),
       '@braceml/react/compiler': fileURLToPath(new URL('./packages/react/src/compiler.ts', import.meta.url)),
       '@braceml/react/vite': fileURLToPath(new URL('./packages/react/src/vite.ts', import.meta.url)),

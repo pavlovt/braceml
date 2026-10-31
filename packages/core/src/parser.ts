@@ -1,10 +1,13 @@
 import type {
   Attribute,
   AwaitBlock,
+  CommentNode,
   EachBlock,
   ElementNode,
+  ElementSyntax,
   IfBlock,
   KeyBlock,
+  Loc,
   Node,
   SnippetBlock,
   SpecialTag,
@@ -18,6 +21,8 @@ export interface ParseOptions {
   filename?: string;
   /** accept any lower-case tag name (default false: unknown tags are errors) */
   allowUnknownTags?: boolean;
+  /** keep `//` comments in the AST, for tools that reprint the source */
+  keepComments?: boolean;
 }
 
 const BLOCK_KEYWORDS = new Set(['if', 'each', 'await', 'key', 'snippet']);
@@ -30,7 +35,7 @@ const SELECTOR_STOP = /[\s.#{}'"()=>]/;
 const VALUE_STOP = /[\s{}'"()>]/;
 
 export function parse(source: string, options: ParseOptions = {}): Template {
-  return new Parser(source, options.filename, options.allowUnknownTags ?? false).parseTemplate();
+  return new Parser(source, options.filename, options.allowUnknownTags ?? false, options.keepComments ?? false).parseTemplate();
 }
 
 class Parser {
@@ -40,6 +45,7 @@ class Parser {
     private readonly src: string,
     private readonly filename?: string,
     private readonly allowUnknownTags = false,
+    private readonly keepComments = false,
   ) {}
 
   // ---------------------------------------------------------------- helpers
@@ -47,6 +53,11 @@ class Parser {
   private error(message: string, offset = this.pos): never {
     throw new BraceMLError(message, this.src, offset, this.filename);
   }
+
+  /** collects `//` comments passed over by skipSpaceAndLineComments */
+  private skipped: Loc[] | null = null;
+  /** comments to put at the start of the next block */
+  private carried: Node[] = [];
 
   private peek(offset = 0): string {
     return this.src[this.pos + offset] ?? '';
@@ -82,7 +93,9 @@ class Parser {
     for (;;) {
       this.skipSpace();
       if (this.startsWith('//')) {
+        const start = this.pos;
         while (!this.eof() && this.peek() !== '\n') this.pos++;
+        this.skipped?.push({ start, end: this.pos });
         continue;
       }
       return;
@@ -231,7 +244,9 @@ class Parser {
         return nodes;
       }
       if (this.startsWith('//')) {
+        const start = this.pos;
         while (!this.eof() && this.peek() !== '\n') this.pos++;
+        if (this.keepComments) nodes.push(this.lineComment({ start, end: this.pos }));
         continue;
       }
       if (this.startsWith('/*')) {
@@ -252,7 +267,11 @@ class Parser {
     const end = this.src.indexOf('*/', this.pos + 2);
     if (end === -1) this.error('Unterminated comment', start);
     this.pos = end + 2;
-    return { type: 'Comment', value: this.src.slice(start + 2, end).trim(), loc: { start, end: this.pos } };
+    return { type: 'Comment', value: this.src.slice(start + 2, end).trim(), style: 'block', loc: { start, end: this.pos } };
+  }
+
+  private lineComment(loc: Loc): CommentNode {
+    return { type: 'Comment', value: this.src.slice(loc.start + 2, loc.end).trim(), style: 'line', loc };
   }
 
   private parseNode(): Node {
@@ -336,15 +355,22 @@ class Parser {
   private parseBlockBody(): Node[] {
     const open = this.pos;
     this.expect('{');
-    return this.parseNodes(open);
+    const carried = this.carried;
+    this.carried = [];
+    return [...carried, ...this.parseNodes(open)];
   }
 
   /** look ahead (across whitespace/comments) for a continuation keyword */
   private lookaheadKeyword(word: string): boolean {
     const save = this.pos;
+    const comments: Loc[] = [];
+    this.skipped = comments;
     this.skipSpaceAndLineComments();
+    this.skipped = null;
     if (this.atKeyword(word)) {
       this.pos += word.length;
+      // a comment before the keyword moves into the block after it
+      if (this.keepComments) this.carried = comments.map((loc) => this.lineComment(loc));
       return true;
     }
     this.pos = save;
@@ -479,6 +505,8 @@ class Parser {
       children: null,
       loc: { start, end: start },
     };
+    const syntax: ElementSyntax = { selectorEnd: start, multilineGroup: false, groupComments: [], body: null };
+    el.syntax = syntax;
 
     // selector: #id and .class
     while (this.peek() === '.' || this.peek() === '#') {
@@ -498,8 +526,10 @@ class Parser {
     }
 
     // optional grouped attributes: the `(` must directly follow the selector
+    syntax.selectorEnd = this.pos;
     let grouped = false;
     let groupOpen = -1;
+    const groupComments: Loc[] = [];
     if (this.peek() === '(') {
       grouped = true;
       groupOpen = this.pos;
@@ -507,8 +537,13 @@ class Parser {
     }
 
     for (;;) {
-      if (grouped) this.skipSpaceAndLineComments();
-      else this.skipInlineSpace();
+      if (grouped) {
+        this.skipped = groupComments;
+        this.skipSpaceAndLineComments();
+        this.skipped = null;
+      } else {
+        this.skipInlineSpace();
+      }
 
       const c = this.peek();
       if (this.eof()) {
@@ -516,6 +551,7 @@ class Parser {
         break;
       }
       if (grouped && c === ')') {
+        syntax.multilineGroup = this.src.slice(groupOpen, this.pos).includes('\n');
         this.pos++;
         grouped = false;
         continue;
@@ -536,11 +572,13 @@ class Parser {
       if (c === '{') {
         if (grouped) this.error("Missing ')' before the children block", groupOpen);
         el.children = this.parseBlockBody();
+        syntax.body = 'block';
         break;
       }
       if (c === "'" || c === '"') {
         if (grouped) this.error("Missing ')' before the text", groupOpen);
         el.children = [this.parseText()];
+        syntax.body = 'text';
         break;
       }
       if (c === '>') {
@@ -551,11 +589,13 @@ class Parser {
         if (n === "'" || n === '"') el.children = [this.parseText()];
         else if (TAG_START.test(n) || n === '.' || n === '#') el.children = [this.parseElement()];
         else this.error("Expected an element or text after '>'");
+        syntax.body = 'chain';
         break;
       }
       el.attributes.push(this.parseAttribute());
     }
 
+    if (this.keepComments) syntax.groupComments = groupComments.map((loc) => this.src.slice(loc.start, loc.end).trimEnd());
     el.loc.end = this.pos;
     return el;
   }

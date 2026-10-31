@@ -1,5 +1,6 @@
 import { parse } from '@babel/parser';
-import MagicString from 'magic-string';
+import { joinWithMap } from '@braceml/core';
+import type { MappedPiece } from '@braceml/core';
 import { compileJsx } from './compiler.js';
 
 const RUNTIME = '@braceml/react';
@@ -49,9 +50,9 @@ export function transformBraceML(code: string, filename: string, options: BraceM
   });
   if (tags.size === 0) return null;
 
-  const s = new MagicString(code);
+  const pieces: MappedPiece[] = [];
   const uses = { Fragment: false, Await: false };
-  let changed = false;
+  let last = 0;
 
   visit(program, (node) => {
     if (node.type !== 'TaggedTemplateExpression') return;
@@ -73,17 +74,22 @@ export function transformBraceML(code: string, filename: string, options: BraceM
       indent: options.indent,
       allowUnknownTags: options.allowUnknownTags,
       names: { Fragment: FRAGMENT, Await: AWAIT },
+      track: true,
     });
     uses.Fragment ||= output.uses.Fragment;
     uses.Await ||= output.uses.Await;
-    s.overwrite(node.start, node.end, `(\n${output.code})`);
-    changed = true;
+    pieces.push({ start: last, end: node.start });
+    pieces.push({ code: `(\n${output.code})`, offsets: [null, ...output.offsets!.slice(0, -1), null] });
+    last = node.end;
   });
-  if (!changed) return null;
+  if (last === 0) return null;
+  pieces.push({ start: last, end: code.length });
 
-  if (uses.Fragment) s.prepend(`import { Fragment as ${FRAGMENT} } from 'react';\n`);
-  if (uses.Await) s.prepend(`import { Await as ${AWAIT} } from '${RUNTIME}';\n`);
-  return { code: s.toString(), map: s.generateMap({ source: filename, hires: true }) };
+  const imports: string[] = [];
+  if (uses.Fragment) imports.push(`import { Fragment as ${FRAGMENT} } from 'react';`);
+  if (uses.Await) imports.push(`import { Await as ${AWAIT} } from '${RUNTIME}';`);
+  if (imports.length) pieces.unshift({ code: imports.join(' ') + ' ', offsets: [null] });
+  return joinWithMap(code, pieces, filename);
 }
 
 /**

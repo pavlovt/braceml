@@ -34,6 +34,7 @@
     "braceml": "./dist/index.js"
   },
   "dependencies": {
+    "@braceml/convert": "workspace:^",
     "@braceml/core": "workspace:^",
     "@braceml/html": "workspace:^",
     "@braceml/react": "workspace:^",

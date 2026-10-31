@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@braceml/core": "workspace:^",
+    "@braceml/react": "workspace:^",
     "vscode-languageserver": "^11.0.0",
     "vscode-languageserver-textdocument": "^1.0.16"
   },

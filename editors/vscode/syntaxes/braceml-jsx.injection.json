@@ -1,0 +1,34 @@
+{
+  "scopeName": "braceml.jsx.injection",
+  "injectionSelector": "L:source.js -comment -string, L:source.js.jsx -comment -string, L:source.jsx -comment -string, L:source.ts -comment -string, L:source.tsx -comment -string",
+  "patterns": [
+    {
+      "include": "#template"
+    }
+  ],
+  "repository": {
+    "template": {
+      "begin": "\\b(braceml)\\s*(`)",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.function.tagged-template.js"
+        },
+        "2": {
+          "name": "punctuation.definition.string.template.begin.js"
+        }
+      },
+      "end": "`",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.template.end.js"
+        }
+      },
+      "contentName": "source.braceml",
+      "patterns": [
+        {
+          "include": "source.braceml"
+        }
+      ]
+    }
+  }
+}

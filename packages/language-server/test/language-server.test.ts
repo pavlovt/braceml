@@ -227,3 +227,46 @@ describe('hover', () => {
     expect(hover('d|iv')).toBeNull();
   });
 });
+
+describe('JSX templates', () => {
+  const jsx = (text: string) => TextDocument.create('file:///a.jsx', 'javascriptreact', 1, text);
+  const head = `import { braceml } from '@braceml/react';\nimport { TodoItem } from './TodoItem';\n`;
+
+  it('finds tagged templates and skips comments', () => {
+    const doc = jsx(`${head}// braceml\`p 'no'\`\nconst a = braceml\`p 'yes'\`;\n`);
+    const regions = findRegions(doc);
+    expect(regions.map((r) => r.source)).toEqual(["p 'yes'"]);
+    expect(doc.getText().slice(regions[0].start, regions[0].start + 7)).toBe("p 'yes'");
+  });
+
+  it('ignores files that do not import the tag', () => {
+    expect(findRegions(jsx("const a = braceml`p 'x'`;"))).toEqual([]);
+  });
+
+  it('reports errors at the right place, with the React target', () => {
+    const doc = jsx(`${head}const a = braceml\`\n  input bind:value={v}\n\`;\n`);
+    const [d] = getDiagnostics(doc);
+    expect(d.message).toContain("'bind:value' is not supported by the 'react' target");
+    expect(d.range.start.line).toBe(3);
+  });
+
+  it('accepts React attributes and Svelte-free templates', () => {
+    expect(getDiagnostics(jsx(`${head}const a = braceml\`p onClick={f} 'x'\`;`))).toEqual([]);
+  });
+
+  it('completes inside the template and not outside it', () => {
+    const text = `${head}const a = braceml\`\n  |\n\`;\n`;
+    const offset = text.indexOf('|');
+    const doc = jsx(text.replace('|', ''));
+    const labels = getCompletions(doc, doc.positionAt(offset)).map((i) => i.label);
+    expect(labels).toContain('TodoItem');
+    expect(labels).toContain('each');
+    expect(getCompletions(doc, doc.positionAt(5))).toEqual([]);
+  });
+
+  it('shows hover help', () => {
+    const text = `${head}const a = braceml\`\n  each xs as x { }\n\`;\n`;
+    const doc = jsx(text);
+    expect(getHover(doc, doc.positionAt(text.indexOf('each') + 1))).not.toBeNull();
+  });
+});

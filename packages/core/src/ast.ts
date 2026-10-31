@@ -31,6 +31,18 @@ export interface ElementNode {
   /** null = no body at all (void or empty element) */
   children: Node[] | null;
   loc: Loc;
+  /** how the element was written, for tools that reprint it */
+  syntax?: ElementSyntax;
+}
+
+export interface ElementSyntax {
+  /** offset just after the selector */
+  selectorEnd: number;
+  /** the attributes were in `tag(` ... `)` across several lines */
+  multilineGroup: boolean;
+  /** `//` comments inside `tag(` ... `)`; only with the keepComments option */
+  groupComments: string[];
+  body: 'block' | 'text' | 'chain' | null;
 }
 
 export interface TextNode {
@@ -43,6 +55,8 @@ export interface TextNode {
 export interface CommentNode {
   type: 'Comment';
   value: string;
+  /** `line` is a `//` comment, which only exists with the keepComments option */
+  style?: 'line' | 'block';
   loc: Loc;
 }
 

@@ -16,6 +16,12 @@
       "@braceml/core": [
         "./packages/core/src/index.ts"
       ],
+      "@braceml/convert": [
+        "./packages/convert/src/index.ts"
+      ],
+      "@braceml/prettier-plugin": [
+        "./packages/prettier-plugin/src/index.ts"
+      ],
       "@braceml/html": [
         "./packages/html/src/index.ts"
       ],

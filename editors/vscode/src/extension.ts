@@ -15,6 +15,8 @@ export function activate(context: ExtensionContext): Promise<void> {
       documentSelector: [
         { scheme: 'file', language: 'braceml' },
         { scheme: 'file', language: 'svelte' },
+        { scheme: 'file', language: 'javascriptreact' },
+        { scheme: 'file', language: 'typescriptreact' },
       ],
       initializationOptions: {
         allowUnknownTags: workspace.getConfiguration('braceml').get('allowUnknownTags'),

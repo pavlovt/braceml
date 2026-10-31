@@ -1,4 +1,4 @@
-import { BraceMLError, VOID_ELEMENTS } from '@braceml/core';
+import { BraceMLError, extractLineOffsets, markLines, VOID_ELEMENTS } from '@braceml/core';
 import type { Attribute, ElementNode, Node, SpecialTag, SnippetBlock, Template } from '@braceml/core';
 
 export interface JsxPrinterOptions {
@@ -7,6 +7,8 @@ export interface JsxPrinterOptions {
   filename?: string;
   /** local names of the helpers the output refers to */
   names?: { Fragment?: string; Await?: string };
+  /** record which source node each output line came from */
+  track?: boolean;
 }
 
 export interface JsxOutput {
@@ -14,6 +16,8 @@ export interface JsxOutput {
   code: string;
   /** helpers the expression needs in scope */
   uses: { Fragment: boolean; Await: boolean };
+  /** the source offset of each output line; only with the track option */
+  offsets?: (number | null)[];
 }
 
 const ATTRIBUTE_NAMES: Record<string, string> = {
@@ -167,6 +171,7 @@ const isDeclaration = (node: Node) => node.type === 'Snippet' || (node.type === 
 export function printJsx(ast: Template, options: JsxPrinterOptions): JsxOutput {
   const printer = new JsxPrinter(options);
   const code = printer.printValue(ast.children, 0).join('\n') + '\n';
+  if (options.track) return { ...extractLineOffsets(code), uses: printer.uses };
   return { code, uses: printer.uses };
 }
 
@@ -180,6 +185,10 @@ class JsxPrinter {
 
   private fail(message: string, offset: number): never {
     throw new BraceMLError(message, this.opts.source, offset, this.opts.filename);
+  }
+
+  private mark(lines: string[], node: Node): string[] {
+    return this.opts.track ? markLines(lines, node.loc.start) : lines;
   }
 
   private pad(depth: number): string {
@@ -210,9 +219,9 @@ class JsxPrinter {
     if (nodes.length === 0) return [`${pad}null`];
     if (nodes.length === 1) {
       const node = nodes[0];
-      if (node.type === 'Element') return this.printElement(node, depth);
-      if (node.type === 'If') return this.printIf(node, depth, '', '');
-      if (node.type === 'Each') return this.printEach(node, depth, '', '');
+      if (node.type === 'Element') return this.mark(this.printElement(node, depth), node);
+      if (node.type === 'If') return this.mark(this.printIf(node, depth, '', ''), node);
+      if (node.type === 'Each') return this.mark(this.printEach(node, depth, '', ''), node);
       if (node.type === 'Await' || node.type === 'Key') return this.printNode(node, depth);
       if (node.type === 'Special' && node.kind === 'render') return [`${pad}${this.renderExpression(node)}`];
     }
@@ -253,7 +262,7 @@ class JsxPrinter {
   }
 
   private printKeyed(nodes: Node[], depth: number, key: string): string[] {
-    if (nodes.length === 1 && nodes[0].type === 'Element') return this.printElement(nodes[0], depth, key);
+    if (nodes.length === 1 && nodes[0].type === 'Element') return this.mark(this.printElement(nodes[0], depth, key), nodes[0]);
     const pad = this.pad(depth);
     const tag = this.fragment();
     return [`${pad}<${tag} key={${key}}>`, ...this.printSiblings(nodes, depth + 1), `${pad}</${tag}>`];
@@ -269,6 +278,10 @@ class JsxPrinter {
   }
 
   private printNode(node: Node, depth: number): string[] {
+    return this.mark(this.printNodeLines(node, depth), node);
+  }
+
+  private printNodeLines(node: Node, depth: number): string[] {
     const pad = this.pad(depth);
     switch (node.type) {
       case 'Text':
@@ -507,7 +520,8 @@ class JsxPrinter {
     const lines = this.printSiblings(children, depth + 1);
     if (props.length) return [`${pad}${open}`, ...props, `${pad}>`, ...lines, `${pad}</${el.name}>`];
 
-    if (children.length === 1 && children[0].type === 'Text' && !children[0].value.includes('\n')) {
+    const preserve = /^(pre|textarea)$/i.test(el.name);
+    if (children.length === 1 && children[0].type === 'Text' && (preserve || !children[0].value.includes('\n'))) {
       return [`${pad}${open}>${children[0].value}</${el.name}>`];
     }
     return [`${pad}${open}>`, ...lines, `${pad}</${el.name}>`];

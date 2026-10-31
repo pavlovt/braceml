@@ -15,10 +15,10 @@ export interface CompileReactOptions {
 /** Compiles BraceML to one JSX expression, and reports the helpers it needs. */
 export function compileJsx(
   source: string,
-  options: CompileReactOptions & { names?: { Fragment?: string; Await?: string } } = {},
+  options: CompileReactOptions & { names?: { Fragment?: string; Await?: string }; track?: boolean } = {},
 ): JsxOutput {
   const ast = parse(source, { filename: options.filename, allowUnknownTags: options.allowUnknownTags });
-  return printJsx(ast, { source, filename: options.filename, indent: options.indent, names: options.names });
+  return printJsx(ast, { source, filename: options.filename, indent: options.indent, names: options.names, track: options.track });
 }
 
 /**

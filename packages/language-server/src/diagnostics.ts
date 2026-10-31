@@ -1,4 +1,5 @@
 import { BraceMLError, parse, printMarkup, walk } from '@braceml/core';
+import { compileJsx } from '@braceml/react/compiler';
 import type { Template } from '@braceml/core';
 import type { TextDocument } from 'vscode-languageserver-textdocument';
 import { DiagnosticSeverity } from 'vscode-languageserver';
@@ -28,11 +29,12 @@ export function getDiagnostics(document: TextDocument, options: DiagnosticOption
   );
 }
 
-function checkRegion({ source }: Region, options: DiagnosticOptions): Problem[] {
+function checkRegion({ source, target }: Region, options: DiagnosticOptions): Problem[] {
   try {
     const ast = parse(source, { allowUnknownTags: options.allowUnknownTags });
     // the printer rejects things the parser accepts, such as a void element with a body
-    printMarkup(ast, { target: 'svelte', source });
+    if (target === 'react') compileJsx(source, { allowUnknownTags: options.allowUnknownTags });
+    else printMarkup(ast, { target: 'svelte', source });
     return lint(ast, source);
   } catch (err) {
     if (!(err instanceof BraceMLError)) throw err;

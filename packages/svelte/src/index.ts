@@ -1,4 +1,5 @@
-import { parse, printMarkup } from '@braceml/core';
+import { joinWithMap, parse, printMarkup, printMarkupTracked } from '@braceml/core';
+import type { MappedPiece } from '@braceml/core';
 
 export interface CompileSvelteOptions {
   filename?: string;
@@ -48,15 +49,20 @@ export function braceml(options: BraceMLPreprocessorOptions = {}) {
     name: 'braceml',
     markup({ content, filename }: MarkupInput) {
       if (!content.includes('<template')) return;
-      let changed = false;
-      const code = content.replace(pattern, (match: string, inner: string, offset: number) => {
-        changed = true;
-        const innerStart = offset + match.indexOf('>') + 1;
-        // keep line numbers in error messages pointing at the .svelte file
-        const padded = content.slice(0, innerStart).replace(/[^\n]/g, ' ') + inner;
-        return compileSvelte(padded, { filename, indent: options.indent, allowUnknownTags: options.allowUnknownTags }).trim();
-      });
-      return changed ? { code } : undefined;
+      const pieces: MappedPiece[] = [];
+      let last = 0;
+      for (const match of content.matchAll(pattern)) {
+        const innerStart = match.index + match[0].indexOf('>') + 1;
+        // keep offsets, and so line numbers in error messages, pointing at the .svelte file
+        const padded = content.slice(0, innerStart).replace(/[^\n]/g, ' ') + match[1];
+        const ast = parse(padded, { filename, allowUnknownTags: options.allowUnknownTags });
+        const { code, offsets } = printMarkupTracked(ast, { target: 'svelte', source: padded, filename, indent: options.indent });
+        pieces.push({ start: last, end: match.index }, { code: code.trim(), offsets });
+        last = match.index + match[0].length;
+      }
+      if (last === 0) return;
+      pieces.push({ start: last, end: content.length });
+      return joinWithMap(content, pieces, filename);
     },
   };
 }

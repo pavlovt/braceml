@@ -1,5 +1,7 @@
 import type { Attribute, ElementNode, Node, Template } from './ast.js';
 import { BraceMLError } from './errors.js';
+import { extractLineOffsets, markLines } from './sourcemap.js';
+import type { LineOffsets } from './sourcemap.js';
 
 /**
  * Prints an AST as HTML-like markup. Used by the `html` and `svelte` targets,
@@ -11,6 +13,8 @@ export interface MarkupPrinterOptions {
   indent?: string;
   source: string;
   filename?: string;
+  /** record which source node each output line came from */
+  track?: boolean;
 }
 
 export const VOID_ELEMENTS = new Set([
@@ -21,6 +25,11 @@ export const VOID_ELEMENTS = new Set([
 export function printMarkup(ast: Template, options: MarkupPrinterOptions): string {
   const printer = new MarkupPrinter(options);
   return printer.printNodes(ast.children, 0).join('\n') + '\n';
+}
+
+/** Like printMarkup, and also reports the source offset of each output line. */
+export function printMarkupTracked(ast: Template, options: MarkupPrinterOptions): LineOffsets {
+  return extractLineOffsets(printMarkup(ast, { ...options, track: true }));
 }
 
 class MarkupPrinter {
@@ -42,7 +51,10 @@ class MarkupPrinter {
 
   printNodes(nodes: Node[], depth: number): string[] {
     const lines: string[] = [];
-    for (const node of nodes) lines.push(...this.printNode(node, depth));
+    for (const node of nodes) {
+      const printed = this.printNode(node, depth);
+      lines.push(...(this.opts.track ? markLines(printed, node.loc.start) : printed));
+    }
     return lines;
   }
 
@@ -162,7 +174,8 @@ class MarkupPrinter {
       this.fail(`<${el.name}> is a void element and cannot have children`, el.loc.start);
     }
 
-    if (children.length === 1 && children[0].type === 'Text' && !children[0].value.includes('\n')) {
+    const preserve = /^(pre|textarea)$/i.test(el.name);
+    if (children.length === 1 && children[0].type === 'Text' && (preserve || !children[0].value.includes('\n'))) {
       return [`${pad}${open}>${children[0].value}</${el.name}>`];
     }
 

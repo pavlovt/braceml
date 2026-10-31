@@ -59,6 +59,20 @@
         "embeddedLanguages": {
           "source.braceml": "braceml"
         }
+      },
+      {
+        "scopeName": "braceml.jsx.injection",
+        "path": "./syntaxes/braceml-jsx.injection.json",
+        "injectTo": [
+          "source.js",
+          "source.js.jsx",
+          "source.jsx",
+          "source.ts",
+          "source.tsx"
+        ],
+        "embeddedLanguages": {
+          "source.braceml": "braceml"
+        }
       }
     ],
     "snippets": [
@@ -98,6 +112,8 @@
   "main": "./dist/extension.cjs",
   "activationEvents": [
     "onLanguage:braceml",
-    "onLanguage:svelte"
+    "onLanguage:svelte",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescriptreact"
   ]
 }

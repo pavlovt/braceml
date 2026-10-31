@@ -160,11 +160,12 @@ can't have other children. Put `@html` in its own element.
 - An unused-variable check can't see the names a template uses, because it runs on the
   source. `tsc` with `noUnusedLocals`, and ESLint, may report them.
 - Template expressions aren't type-checked, and they get no completion.
-- The VS Code extension and the language server don't read templates in `.jsx` or `.tsx`
-  files yet, so they have no highlighting or diagnostics there.
+- Editor support only finds templates in files that import from `@braceml/react`, and only
+  when the tag is called `braceml`, not an alias.
 - `each xs as { id, name }` isn't supported, in any target, because `{` ends the header. Use
   `each xs as item` and read `item.id`.
 
 ## A complete app
 
-[examples/react](../examples/react) is a small Vite app written in BraceML.
+[examples/todo-react](../examples/todo-react) is a todo app written in BraceML, and
+[examples/todo-svelte](../examples/todo-svelte) is the same app in Svelte.

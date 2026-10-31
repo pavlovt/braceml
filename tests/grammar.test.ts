@@ -46,7 +46,52 @@ async function tokenize(lines: string[]) {
   return out;
 }
 
+const injectionPath = new URL('../editors/vscode/syntaxes/braceml-jsx.injection.json', import.meta.url);
+
+async function tokenizeTsx(lines: string[]) {
+  const wasm = readFileSync(require.resolve('vscode-oniguruma/release/onig.wasm')).buffer;
+  await oniguruma.loadWASM(wasm).catch(() => {});
+  const sources: Record<string, unknown> = {
+    'source.braceml': vsctm.parseRawGrammar(readFileSync(grammarPath, 'utf8'), grammarPath.pathname),
+    'source.js': JS_STUB,
+    'source.tsx': vsctm.parseRawGrammar(
+      JSON.stringify({ scopeName: 'source.tsx', patterns: [{ match: '\\breturn\\b', name: 'keyword.control.tsx' }] }),
+      'tsx.json',
+    ),
+    'braceml.jsx.injection': vsctm.parseRawGrammar(readFileSync(injectionPath, 'utf8'), injectionPath.pathname),
+  };
+  const registry = new vsctm.Registry({
+    onigLib: Promise.resolve({
+      createOnigScanner: (s: string[]) => new oniguruma.OnigScanner(s),
+      createOnigString: (s: string) => new oniguruma.OnigString(s),
+    }),
+    loadGrammar: async (scope: string) => (sources[scope] ?? null) as never,
+    getInjections: (scope: string) => (scope === 'source.tsx' ? ['braceml.jsx.injection'] : []),
+  });
+  const grammar = (await registry.loadGrammar('source.tsx'))!;
+  let state = vsctm.INITIAL;
+  const out: [string, string][] = [];
+  for (const line of lines) {
+    const r = grammar.tokenizeLine(line, state);
+    for (const t of r.tokens) {
+      const text = line.slice(t.startIndex, t.endIndex);
+      if (text.trim()) out.push([text.trim(), t.scopes[t.scopes.length - 1]]);
+    }
+    state = r.ruleStack;
+  }
+  return out;
+}
+
 describe('TextMate grammar', () => {
+  it('highlights braceml templates in JSX and TSX files', async () => {
+    const tokens = await tokenizeTsx(['return braceml`', '  if open {', "    p 'Hi'", '  }', '`;', 'return x;']);
+    const scopesOf = (text: string) => tokens.filter(([t]) => t === text).map(([, s]) => s);
+    expect(scopesOf('if')).toEqual(['keyword.control.flow.braceml']);
+    expect(scopesOf('p')).toEqual(['entity.name.tag.braceml']);
+    // the template ends at the backtick
+    expect(scopesOf('return')).toEqual(['keyword.control.tsx', 'keyword.control.tsx']);
+  });
+
   it('highlights the main constructs', async () => {
     const tokens = await tokenize([
       'form.login#main onsubmit={save} {',

@@ -51,8 +51,7 @@
   "sideEffects": false,
   "dependencies": {
     "@babel/parser": "^7.26.0",
-    "@braceml/core": "workspace:^",
-    "magic-string": "^0.30.0"
+    "@braceml/core": "workspace:^"
   },
   "peerDependencies": {
     "react": ">=18"

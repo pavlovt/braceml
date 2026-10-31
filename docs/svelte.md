@@ -70,7 +70,7 @@ component at a time. Files without a block are left untouched.
 
 The [VS Code extension](../editors/vscode) highlights `<template lang="braceml">` blocks
 and works alongside the official Svelte extension. It also shows errors while you type and
-completes elements, attributes and blocks. The `template-braceml` snippet inserts an empty
+completes elements, attributes and blocks, and it can format templates. The `template-braceml` snippet inserts an empty
 block.
 
 The Svelte extension can't parse BraceML, so it shows a false `Expected token }` error in
@@ -352,15 +352,15 @@ img class="size-11 rounded" src={url} alt=""
 **A multi-line head fails.** Remove any space before the `(`: `input(`, not `input (`.
 
 **An error points at the wrong place.** BraceML errors use the line numbers of your
-`.svelte` file. Errors from the Svelte compiler itself refer to the generated markup,
-because source maps aren't implemented yet.
+`.svelte` file. The preprocessor also returns a source map, so Svelte's errors and debuggers
+point at your template too.
 
 ## Limitations
 
-These are on the [roadmap](../README.md#roadmap):
+Known limits:
 
-- No source maps.
-- No formatter or Prettier plugin.
+- The Prettier plugin only formats `.braceml` files. Use `npx @braceml/cli fmt` for
+  `.svelte` files.
 
 These come from how Svelte's tools read a file:
 
@@ -370,3 +370,5 @@ These come from how Svelte's tools read a file:
 ## A complete app
 
 [examples/sveltekit](../examples/sveltekit) is a small SvelteKit app written in BraceML.
+[examples/todo-svelte](../examples/todo-svelte) is a todo app, and
+[examples/todo-react](../examples/todo-react) is the same app in React.

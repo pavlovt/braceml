@@ -59,6 +59,7 @@ describe.skipIf(!existsSync(bin))('built server over stdio', () => {
   it('initializes, validates, completes and hovers', async () => {
     const init = await client.request('initialize', { processId: null, rootUri: null, capabilities: {} });
     expect(init.capabilities.hoverProvider).toBe(true);
+    expect(init.capabilities.documentFormattingProvider).toBe(true);
     client.notify('initialized', {});
 
     const uri = 'file:///t.svelte';
