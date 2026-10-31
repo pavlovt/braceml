@@ -11,6 +11,8 @@ side.
 <img src="docs/images/example-dark.svg#gh-dark-mode-only" alt="A BraceML form with syntax highlighting, using an if block and an each block">
 <img src="docs/images/example-light.svg#gh-light-mode-only" alt="A BraceML form with syntax highlighting, using an if block and an each block">
 
+This example is an image because GitHub doesn't support BraceML yet, so the code blocks below are only partly highlighted, unlike in VS Code with the [BraceML extension](editors/vscode).
+
 ## What is BraceML?
 
 BraceML is a different way to write the same markup. A compiler turns your template into
