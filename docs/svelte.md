@@ -86,8 +86,21 @@ component at a time. Files without a block are left untouched.
 ### 4. Optional: editor support
 
 The [VS Code extension](../editors/vscode) highlights `<template lang="braceml">` blocks
-and works alongside the official Svelte extension. The `template-braceml` snippet inserts
-an empty block.
+and works alongside the official Svelte extension. It also shows errors while you type and
+completes elements, attributes and blocks. The `template-braceml` snippet inserts an empty
+block.
+
+The Svelte extension can't parse BraceML, so it shows a false `Expected token }` error in
+each file with a BraceML block. It reports that error instead of type-checking the file, so
+turning it off loses nothing in those files. It does also turn off type errors in plain
+`.svelte` files, so skip this if your project mixes the two. Add this to
+`.vscode/settings.json`:
+
+```json
+{
+  "svelte.plugin.typescript.diagnostics.enable": false
+}
+```
 
 ## Writing components
 
@@ -364,9 +377,12 @@ because source maps aren't implemented yet.
 These are on the [roadmap](../README.md#roadmap):
 
 - No source maps.
-- No language server, so templates get highlighting but no autocomplete or diagnostics
-  while typing.
 - No formatter or Prettier plugin.
+
+These come from how Svelte's tools read a file:
+
+- `svelte-check` reports an error in each file with a BraceML block.
+- Expressions in templates aren't type-checked, and they get no completion.
 
 ## A complete app
 

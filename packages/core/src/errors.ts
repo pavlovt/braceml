@@ -33,6 +33,8 @@ export function codeFrame(source: string, offset: number): string {
 }
 
 export class BraceMLError extends Error {
+  /** the message alone, without the position and code frame */
+  readonly reason: string;
   readonly line: number;
   readonly column: number;
   readonly offset: number;
@@ -45,6 +47,7 @@ export class BraceMLError extends Error {
     const where = `${filename ? filename + ':' : ''}${pos.line}:${pos.column}`;
     super(`${message} (${where})\n\n${frame}`);
     this.name = 'BraceMLError';
+    this.reason = message;
     this.line = pos.line;
     this.column = pos.column;
     this.offset = offset;

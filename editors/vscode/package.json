@@ -2,7 +2,7 @@
   "name": "braceml-vscode",
   "private": true,
   "displayName": "BraceML",
-  "description": "Syntax highlighting and snippets for BraceML, including <template lang=\"braceml\"> in Svelte files",
+  "description": "Syntax highlighting, snippets, diagnostics and completion for BraceML, including <template lang=\"braceml\"> in Svelte files",
   "version": "0.1.0",
   "publisher": "pavlovt",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "directory": "editors/vscode"
   },
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.91.0"
   },
   "categories": [
     "Programming Languages",
@@ -36,6 +36,9 @@
           ".braceml"
         ],
         "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "svelte"
       }
     ],
     "grammars": [
@@ -67,11 +70,34 @@
         "language": "svelte",
         "path": "./snippets/braceml.code-snippets"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "BraceML",
+      "properties": {
+        "braceml.allowUnknownTags": {
+          "type": "boolean",
+          "default": false,
+          "description": "Accept any lower-case tag name. Match the allowUnknownTags option of your BraceML compiler."
+        }
+      }
+    }
   },
   "scripts": {
+    "build": "pnpm --filter @braceml/core build && tsup",
+    "vscode:prepublish": "pnpm build",
     "package": "vsce package --no-dependencies",
     "publish": "vsce publish --no-dependencies"
   },
-  "devDependencies": {}
+  "dependencies": {
+    "vscode-languageclient": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.91.0",
+    "tsup": "^9.0.0"
+  },
+  "main": "./dist/extension.cjs",
+  "activationEvents": [
+    "onLanguage:braceml",
+    "onLanguage:svelte"
+  ]
 }

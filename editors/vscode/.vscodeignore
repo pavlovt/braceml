@@ -1,2 +1,5 @@
 **/*.test.ts
 node_modules
+src
+tsup.config.ts
+*.vsix

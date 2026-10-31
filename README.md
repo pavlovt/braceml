@@ -47,7 +47,8 @@ roughly what Sass is to SCSS.
 | [`@braceml/html`](packages/html) | Compile to plain HTML (also works for Vue/Angular templates) |
 | [`@braceml/svelte`](packages/svelte) | Svelte 5 / SvelteKit preprocessor |
 | [`braceml`](packages/cli) | Command-line compiler |
-| [VS Code extension](editors/vscode) | Highlighting and snippets, including inside `.svelte` files |
+| [`@braceml/language-server`](packages/language-server) | Diagnostics, completion and hover for any LSP editor |
+| [VS Code extension](editors/vscode) | Highlighting, snippets and the language server, including inside `.svelte` files |
 
 ## Use with SvelteKit
 
@@ -101,9 +102,9 @@ npx braceml page.braceml -t svelte -o page.svelte
 - [x] HTML target
 - [x] Svelte target and preprocessor
 - [x] VS Code highlighting and snippets
+- [x] Language server (autocomplete and diagnostics while typing)
 - [ ] Formatter (`braceml fmt`) and HTML → BraceML converter
 - [ ] Source maps
-- [ ] Language server (autocomplete and diagnostics while typing)
 - [ ] Prettier plugin
 - [ ] Online playground
 - [ ] React target
