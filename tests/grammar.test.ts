@@ -7,6 +7,11 @@ import oniguruma from 'vscode-oniguruma';
 const require = createRequire(import.meta.url);
 const grammarPath = new URL('../editors/vscode/syntaxes/braceml.tmLanguage.json', import.meta.url);
 
+const JS_STUB = vsctm.parseRawGrammar(
+  JSON.stringify({ scopeName: 'source.js', patterns: [{ match: '\\bnull\\b', name: 'constant.language.null.js' }] }),
+  'stub.json',
+);
+
 async function loadGrammar() {
   const wasm = readFileSync(require.resolve('vscode-oniguruma/release/onig.wasm')).buffer;
   await oniguruma.loadWASM(wasm);
@@ -18,7 +23,9 @@ async function loadGrammar() {
     loadGrammar: async (scope: string) =>
       scope === 'source.braceml'
         ? vsctm.parseRawGrammar(readFileSync(grammarPath, 'utf8'), grammarPath.pathname)
-        : null, // source.js is provided by VS Code at runtime
+        : scope === 'source.js'
+          ? JS_STUB // provided by VS Code at runtime; rules that only include a missing grammar are dropped
+          : null,
   });
   return (await registry.loadGrammar('source.braceml'))!;
 }
@@ -65,5 +72,21 @@ describe('TextMate grammar', () => {
     expect(scopeOf('render')).toBe('keyword.control.braceml');
     expect(scopeOf('// note')).toBe('comment.line.double-slash.braceml');
     expect(tokens.some(([t, s]) => t === 'Hello' && s === 'string.quoted.single.braceml')).toBe(true);
+  });
+
+  it('highlights keywords that continue a block after }', async () => {
+    const tokens = await tokenize([
+      'if a {',
+      '} else if b {',
+      '}',
+      'await p {',
+      '} then value {',
+      '} catch err {',
+      '}',
+    ]);
+    const scopeOf = (text: string) => tokens.find(([t]) => t === text)?.[1];
+    expect(scopeOf('else if')).toBe('keyword.control.flow.braceml');
+    expect(scopeOf('then')).toBe('keyword.control.flow.braceml');
+    expect(scopeOf('catch')).toBe('keyword.control.flow.braceml');
   });
 });

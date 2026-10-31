@@ -157,7 +157,7 @@
       ]
     },
     "continuation": {
-      "begin": "\\b(else\\s+if|then|catch)\\b(?=\\s)",
+      "begin": "(?:^|(?<=\\}))\\s*\\b(else\\s+if|then|catch)\\b(?=\\s)",
       "beginCaptures": {
         "1": {
           "name": "keyword.control.flow.braceml"
