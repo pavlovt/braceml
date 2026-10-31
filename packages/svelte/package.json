@@ -1,6 +1,6 @@
 {
   "name": "@braceml/svelte",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "BraceML for Svelte 5 / SvelteKit: compiler and svelte.config.js preprocessor",
   "keywords": [
     "braceml",

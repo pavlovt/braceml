@@ -1,6 +1,6 @@
 {
   "name": "@braceml/react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Write React components with BraceML templates",
   "keywords": [
     "braceml",
