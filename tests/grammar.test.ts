@@ -124,6 +124,9 @@ describe('TextMate grammar', () => {
     expect(tokens.find(([t]) => t === 'if')?.[1]).toBe('keyword.control.flow.braceml');
     // the block ends at the closing fence
     expect(scopesOf('plain')).toEqual(['markup.plain', 'markup.plain']);
+
+    const tagged = await tokenizeMarkdown(['```svelte braceml', "p 'Hi'", '```']);
+    expect(tagged.find(([t]) => t === 'p')?.[1]).toBe('entity.name.tag.braceml');
   });
 
   it('highlights braceml templates in JSX and TSX files', async () => {

@@ -19,7 +19,7 @@ setup, see the [Svelte guide](svelte.md) and the [React guide](react.md).
 
 Install the command-line compiler, or run it with `npx`, and create `page.braceml`:
 
-```braceml
+```svelte braceml
 main.page {
   h1 'Hello'
   p 'Templates without closing tags.'
@@ -50,7 +50,7 @@ To use BraceML in an app, follow the [Svelte guide](svelte.md) or the
 
 An element is a CSS-style selector, then attributes, then a body:
 
-```braceml
+```svelte braceml
 input#email.field type=email required
 button.primary type=submit 'Save'
 ```
@@ -62,7 +62,7 @@ upper-case letter is a component.
 
 An element has one body at most:
 
-```braceml
+```svelte braceml
 div { p 'Children go in braces' }    // any number of children
 label 'One text child'               // quoted text
 li > a href=/ 'One element child'    // a chain
@@ -76,13 +76,13 @@ Chains can nest, which is useful for wrappers: `ul > li > a href=/ 'Home'`.
 Quotes are how BraceML tells text from elements, so it never has to guess. Expressions in
 text go inside the quotes:
 
-```braceml
+```svelte braceml
 p 'Hello {user.name}'
 ```
 
 Text is printed as written, so it can hold entities and inline markup:
 
-```braceml
+```svelte braceml
 p 'Hello <strong>{name}</strong>,&nbsp;welcome.'
 ```
 
@@ -90,7 +90,7 @@ p 'Hello <strong>{name}</strong>,&nbsp;welcome.'
 
 A `{` opens an expression only right after `=` or `...`. Anywhere else it opens children.
 
-```braceml
+```svelte braceml
 button onclick={save} { 'Save' }
 //             ^ expression  ^ children
 ```
@@ -101,7 +101,7 @@ Whitespace doesn't matter between nodes, and indentation has no meaning. The one
 is a newline in an element head, which ends the head. To spread attributes over several
 lines, put parentheses straight after the selector, with no space:
 
-```braceml
+```svelte braceml
 input.field(
   type=email
   placeholder="Enter email"
@@ -113,7 +113,7 @@ input.field(
 
 Control flow uses keywords followed by braces:
 
-```braceml
+```svelte braceml
 if loading {
   Spinner
 } else if error {
@@ -134,7 +134,7 @@ in the `svelte` and `react` targets.
 
 ### Links in a list
 
-```braceml
+```svelte braceml
 nav > ul {
   each links as link (link.href) {
     li > a href={link.href} class:active={link.href === path} '{link.label}'
@@ -144,7 +144,7 @@ nav > ul {
 
 ### A form field
 
-```braceml
+```svelte braceml
 label.field {
   span 'Email'
   input type=email name=email required
@@ -156,7 +156,7 @@ label.field {
 Text on the same line as an element is that element's body, so give sibling text its own
 line:
 
-```braceml
+```svelte braceml
 label {
   input type=checkbox
   ' Remember me'
@@ -168,13 +168,13 @@ label {
 Use the `class` attribute. Tailwind scans source files and doesn't detect classes written
 as selectors, and a selector class can't contain a dot:
 
-```braceml
+```svelte braceml
 .card class="w-1.5 rounded-lg md:flex" 'Hello'
 ```
 
 ### Reusable markup
 
-```braceml
+```svelte braceml
 snippet row(user) {
   td '{user.name}'
   td '{user.email}'
@@ -189,7 +189,7 @@ table > tbody {
 
 ### Loading states
 
-```braceml
+```svelte braceml
 await load() {
   p 'Loading…'
 } then data {
@@ -204,7 +204,7 @@ await load() {
 The `html` target leaves framework attributes alone, so you can write Vue and Angular
 templates and hand the output to their compilers:
 
-```braceml
+```svelte braceml
 button @click="save()" :disabled="busy" 'Vue'
 button (click)="save()" [disabled]="busy" 'Angular'
 ```
@@ -222,6 +222,10 @@ button (click)="save()" [disabled]="busy" 'Angular'
 | `each xs as { id }`   | `{` ends the header.                     | `each xs as x`, then `x.id` |
 
 ## Tools
+
+In Markdown, write a code block as ```` ```svelte braceml ````. GitHub only reads the first word
+and has no BraceML grammar, so it uses its Svelte colors. The VS Code extension uses the
+BraceML grammar for this block, and for plain ```` ```braceml ```` blocks.
 
 | Tool | What it does |
 |------|--------------|
@@ -355,7 +359,7 @@ The class attribute is merged with the selector classes, so `.a class="b"` becom
 Wrap attributes in parentheses to spread them over several lines. The `(` must
 directly follow the selector, with no whitespace in between:
 
-```braceml
+```svelte braceml
 input.form-control(
   type=email
   placeholder="Enter email"
@@ -392,7 +396,7 @@ in `()`, `[]` or a string.
 
 #### 4.1 if
 
-```braceml
+```svelte braceml
 if loading {
   Spinner
 } else if error {
@@ -408,7 +412,7 @@ The header uses Svelte's syntax: `collection as pattern[, index] [(key)]`. A pat
 a name or an array pattern (`[id, name]`). An object pattern isn't accepted, because `{`
 ends the header.
 
-```braceml
+```svelte braceml
 each users as user, i (user.id) {
   li '{i + 1}. {user.name}'
 } else {
@@ -420,7 +424,7 @@ The `else` branch renders when the collection is empty.
 
 #### 4.3 await
 
-```braceml
+```svelte braceml
 await promise {
   p 'Loading…'
 } then value {
@@ -437,7 +441,7 @@ The short forms are also accepted: `await promise then value { ... }` and
 
 Recreates its children when the value changes.
 
-```braceml
+```svelte braceml
 key value {
   Fancy
 }
@@ -447,7 +451,7 @@ key value {
 
 Declares reusable markup. A snippet that is a child of a component is passed to it.
 
-```braceml
+```svelte braceml
 snippet row(user) {
   td '{user.name}'
 }

@@ -94,7 +94,7 @@ what you'll use most in Svelte.
 
 Text is always quoted, and expressions in text go inside the quotes:
 
-```braceml
+```svelte braceml
 h1.title 'Hello {user.name}'
 a.button href="/users/{user.id}" 'Profile'
 img src={user.avatar} alt="{user.name}'s avatar"
@@ -102,13 +102,13 @@ img src={user.avatar} alt="{user.name}'s avatar"
 
 `{` opens an expression only right after `=`, so it is fine to pass objects and functions:
 
-```braceml
+```svelte braceml
 Chart options={{ legend: false, axis: { x: 'time' } }}
 ```
 
 Use `tag(` with no space before the `(` to spread attributes over several lines:
 
-```braceml
+```svelte braceml
 button.btn(
   type=button
   disabled={!ready}
@@ -120,14 +120,14 @@ button.btn(
 
 For a sentence with inline elements, put the markup in the string:
 
-```braceml
+```svelte braceml
 p 'Hello <strong>{name}</strong>, welcome.'
 ```
 
 You can also put each piece on its own line, but the line breaks become spaces in the
 page. This renders a space before the comma:
 
-```braceml
+```svelte braceml
 p {
   'Hello '
   strong '{name}'
@@ -161,7 +161,7 @@ Runes stay in `<script>`. The template refers to them by name:
 
 Directives pass through to Svelte as written:
 
-```braceml
+```svelte braceml
 input.search(
   bind:value={query}
   bind:this={field}
@@ -204,7 +204,7 @@ usual. Children become the component's `children` snippet:
 
 Spread props with `{...props}`:
 
-```braceml
+```svelte braceml
 Card {...props}
 ```
 
@@ -223,7 +223,7 @@ Card {...props}
 | `{@const y = x * 2}`                       | `@const y = x * 2`               |
 | `{@debug x}`                               | `@debug x`                       |
 
-```braceml
+```svelte braceml
 each orders as order (order.id) {
   @const total = order.price * order.quantity
   p '{order.name}: {total}'
@@ -236,7 +236,7 @@ Tags starting with `@` run to the end of the line.
 
 Snippets can be passed to a component by nesting them, as in Svelte:
 
-```braceml
+```svelte braceml
 Table rows={users} {
   snippet row(user) {
     td '{user.name}'
@@ -248,7 +248,7 @@ Table rows={users} {
 
 `svelte:` elements work like any other tag:
 
-```braceml
+```svelte braceml
 svelte:head > title 'Dashboard'
 svelte:window onkeydown={onKey}
 
@@ -329,7 +329,7 @@ an error to a `Card` containing an empty `<title>`. Write `Card title={title}`. 
 **`input ' Name'` is an error.** Void elements can't have a body. Put the text on its own
 line:
 
-```braceml
+```svelte braceml
 label {
   input type=checkbox
   ' Name'
@@ -345,7 +345,7 @@ compile correctly but get no CSS unless the same class also appears somewhere Ta
 read it, so the problem can show up only on some classes. With Tailwind, always use the
 `class` attribute:
 
-```braceml
+```svelte braceml
 img class="size-11 rounded" src={url} alt=""
 ```
 

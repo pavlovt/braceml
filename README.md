@@ -8,7 +8,7 @@ HTML, Svelte 5 and React.
 SvelteKit storefront built twice, in BraceML and in HTML, so you can compare them side by
 side.
 
-```braceml
+```svelte braceml
 form onsubmit={save} {
   label for=email 'Email address'
   input#email.form-control type=email bind:value={email}
@@ -58,7 +58,7 @@ the nesting.
 
 **BraceML**
 
-```braceml
+```svelte braceml
 nav.menu > ul {
   li > a href=/ 'Home'
   li > a href=/shop 'Shop'
@@ -83,7 +83,7 @@ name is a `div`.
 
 **BraceML**
 
-```braceml
+```svelte braceml
 form.signup action=/join method=post {
   label for=email 'Email'
   input#email.field type=email name=email required
@@ -127,7 +127,7 @@ users.length == 0 ? (
 
 **BraceML, for both.** The React target adds `className`, `key` and the rest for you.
 
-```braceml
+```svelte braceml
 if users.length == 0 {
   p.muted 'No users yet'
 } else {

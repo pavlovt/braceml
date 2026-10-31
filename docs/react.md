@@ -76,7 +76,7 @@ so write `onClick={f}`, not `onclick={f}`.
 
 React has no two-way binding, so `bind:value` is an error. Pass a value and a handler:
 
-```braceml
+```svelte braceml
 input value={text} onchange={(e) => setText(e.target.value)}
 ```
 
@@ -101,7 +101,7 @@ the collection expression runs twice, so don't put an expensive call there.
 
 A snippet inside a component becomes a prop:
 
-```braceml
+```svelte braceml
 Table rows={users} {
   snippet row(user) {
     td '{user.name}'
@@ -118,7 +118,7 @@ example with `useMemo`, or it starts again on every render.
 Unlike HTML, JSX removes line breaks between elements, and the compiler keeps only the
 spaces you write in the quotes. This renders `Hello <strong>you</strong> there`:
 
-```braceml
+```svelte braceml
 p {
   'Hello '
   strong 'you'
