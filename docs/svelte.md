@@ -341,8 +341,17 @@ label {
 ```
 
 **A class with a dot has no effect.** `.w-1.5` compiles without an error to two classes,
-`w-1` and `5`. Use `class="w-1.5"`, which merges with selector classes. Other Tailwind
-classes such as `md:flex` and `w-1/2` work in the selector.
+`w-1` and `5`. Use `class="w-1.5"`, which merges with selector classes.
+
+**A Tailwind class has no effect.** Tailwind finds class names by scanning your source
+files, and it doesn't detect classes in a selector such as `img.size-11.rounded`. They
+compile correctly but get no CSS unless the same class also appears somewhere Tailwind can
+read it, so the problem can show up only on some classes. With Tailwind, always use the
+`class` attribute:
+
+```braceml
+img class="size-11 rounded" src={url} alt=""
+```
 
 **A multi-line head fails.** Remove any space before the `(`: `input(`, not `input (`.
 
