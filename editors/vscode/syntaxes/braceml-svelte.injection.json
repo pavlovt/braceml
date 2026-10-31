@@ -1,0 +1,65 @@
+{
+  "scopeName": "braceml.svelte.injection",
+  "injectionSelector": "L:source.svelte -comment -string",
+  "patterns": [
+    {
+      "include": "#template"
+    }
+  ],
+  "repository": {
+    "template": {
+      "begin": "(<)(template)\\b(?=[^>]*\\blang\\s*=\\s*[\"']braceml[\"'])",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.svelte"
+        },
+        "2": {
+          "name": "entity.name.tag.svelte"
+        }
+      },
+      "end": "(</)(template)(>)",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.svelte"
+        },
+        "2": {
+          "name": "entity.name.tag.svelte"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.svelte"
+        }
+      },
+      "patterns": [
+        {
+          "match": "([\\w:-]+)(=)(\"[^\"]*\"|'[^']*')",
+          "captures": {
+            "1": {
+              "name": "entity.other.attribute-name.svelte"
+            },
+            "2": {
+              "name": "punctuation.separator.key-value.svelte"
+            },
+            "3": {
+              "name": "string.quoted.svelte"
+            }
+          }
+        },
+        {
+          "begin": "(>)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.end.svelte"
+            }
+          },
+          "end": "(?=</template>)",
+          "contentName": "source.braceml",
+          "patterns": [
+            {
+              "include": "source.braceml"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

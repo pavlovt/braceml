@@ -1,0 +1,46 @@
+{
+  "name": "@braceml/core",
+  "version": "0.1.0",
+  "description": "BraceML parser, AST and shared markup printer",
+  "keywords": [
+    "braceml",
+    "template",
+    "html",
+    "template-language",
+    "parser",
+    "ast"
+  ],
+  "license": "MIT",
+  "author": "pavlovt",
+  "homepage": "https://github.com/pavlovt/braceml#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavlovt/braceml.git",
+    "directory": "packages/core"
+  },
+  "bugs": "https://github.com/pavlovt/braceml/issues",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
+}

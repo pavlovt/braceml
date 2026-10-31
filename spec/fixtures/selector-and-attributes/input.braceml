@@ -1,0 +1,8 @@
+#app.min-h-screen.md:flex.w-1/2 class="extra" data-x='say "hi"' {
+  Card.shadow title="Hello"
+  input.a(
+    type=text
+    // a comment inside the group
+    placeholder="Multi-line head"
+  )
+}

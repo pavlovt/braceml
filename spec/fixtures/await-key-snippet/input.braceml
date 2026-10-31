@@ -1,0 +1,15 @@
+await load() {
+  p 'Loading…'
+} then data {
+  @const total = data.items.length
+  p '{total} items'
+} catch err {
+  p.error '{err.message}'
+}
+key route {
+  Page
+}
+snippet row(user) {
+  td > a href="/users/{user.id}" '{user.name}'
+}
+table > tbody > tr { @render row(me) }

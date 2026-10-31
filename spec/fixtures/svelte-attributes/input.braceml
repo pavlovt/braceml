@@ -1,0 +1,5 @@
+form onsubmit={(e) => { e.preventDefault(); save({ id: 1 }); }} {
+  input bind:value={email} {...rest} disabled={!ready}
+  Child ...props onclick={() => count++}
+  div use:tooltip={"hi}"} style:color={color}
+}

@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "@braceml/core": [
+        "./packages/core/src/index.ts"
+      ],
+      "@braceml/html": [
+        "./packages/html/src/index.ts"
+      ],
+      "@braceml/svelte": [
+        "./packages/svelte/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "packages/*/src",
+    "tests",
+    "vitest.config.ts"
+  ]
+}

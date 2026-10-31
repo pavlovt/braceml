@@ -1,0 +1,4 @@
+<div id="app" class="min-h-screen md:flex w-1/2 extra" data-x='say "hi"'>
+  <Card class="shadow" title="Hello" />
+  <input class="a" type="text" placeholder="Multi-line head">
+</div>

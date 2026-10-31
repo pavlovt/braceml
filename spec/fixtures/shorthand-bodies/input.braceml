@@ -1,0 +1,7 @@
+ul.nav {
+  li > a href=/ 'Home'
+  li > a.active href="/about" 'About'
+}
+label for=email "Don't forget"
+input#email.form-control type=email required
+br

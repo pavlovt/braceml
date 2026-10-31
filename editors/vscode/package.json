@@ -1,0 +1,77 @@
+{
+  "name": "braceml-vscode",
+  "private": true,
+  "displayName": "BraceML",
+  "description": "Syntax highlighting and snippets for BraceML, including <template lang=\"braceml\"> in Svelte files",
+  "version": "0.1.0",
+  "publisher": "pavlovt",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pavlovt/braceml.git",
+    "directory": "editors/vscode"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "braceml",
+    "svelte",
+    "template",
+    "html"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "braceml",
+        "aliases": [
+          "BraceML",
+          "braceml"
+        ],
+        "extensions": [
+          ".braceml"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "braceml",
+        "scopeName": "source.braceml",
+        "path": "./syntaxes/braceml.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.expression.braceml": "javascript"
+        }
+      },
+      {
+        "scopeName": "braceml.svelte.injection",
+        "path": "./syntaxes/braceml-svelte.injection.json",
+        "injectTo": [
+          "source.svelte"
+        ],
+        "embeddedLanguages": {
+          "source.braceml": "braceml"
+        }
+      }
+    ],
+    "snippets": [
+      {
+        "language": "braceml",
+        "path": "./snippets/braceml.code-snippets"
+      },
+      {
+        "language": "svelte",
+        "path": "./snippets/braceml.code-snippets"
+      }
+    ]
+  },
+  "scripts": {
+    "package": "vsce package --no-dependencies",
+    "publish": "vsce publish --no-dependencies"
+  },
+  "devDependencies": {}
+}

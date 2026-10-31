@@ -1,0 +1,58 @@
+{
+  "name": "@braceml/svelte",
+  "version": "0.1.0",
+  "description": "BraceML for Svelte 5 / SvelteKit: compiler and svelte.config.js preprocessor",
+  "keywords": [
+    "braceml",
+    "template",
+    "html",
+    "template-language",
+    "svelte",
+    "sveltekit",
+    "preprocessor"
+  ],
+  "license": "MIT",
+  "author": "pavlovt",
+  "homepage": "https://github.com/pavlovt/braceml#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavlovt/braceml.git",
+    "directory": "packages/svelte"
+  },
+  "bugs": "https://github.com/pavlovt/braceml/issues",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@braceml/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "svelte": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

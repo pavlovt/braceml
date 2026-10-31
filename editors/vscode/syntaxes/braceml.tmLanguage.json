@@ -1,0 +1,325 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "BraceML",
+  "scopeName": "source.braceml",
+  "patterns": [
+    {
+      "include": "#node"
+    }
+  ],
+  "repository": {
+    "node": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#special"
+        },
+        {
+          "include": "#block-keyword"
+        },
+        {
+          "include": "#continuation"
+        },
+        {
+          "include": "#tag"
+        },
+        {
+          "include": "#head"
+        },
+        {
+          "include": "#punctuation"
+        }
+      ]
+    },
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.braceml",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.braceml",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.braceml",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "include": "#escape"
+            },
+            {
+              "include": "#interpolation"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.braceml",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "include": "#escape"
+            },
+            {
+              "include": "#interpolation"
+            }
+          ]
+        }
+      ]
+    },
+    "escape": {
+      "name": "constant.character.escape.braceml",
+      "match": "\\\\."
+    },
+    "interpolation": {
+      "name": "meta.embedded.expression.braceml",
+      "begin": "\\{",
+      "end": "\\}",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.section.embedded.begin.braceml"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.embedded.end.braceml"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#js-braces"
+        },
+        {
+          "include": "source.js"
+        }
+      ]
+    },
+    "js-braces": {
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [
+        {
+          "include": "#js-braces"
+        },
+        {
+          "include": "source.js"
+        }
+      ]
+    },
+    "special": {
+      "match": "(@)(render|html|const|debug)\\b(.*?)(?=\\}|$)",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.keyword.braceml"
+        },
+        "2": {
+          "name": "keyword.control.braceml"
+        },
+        "3": {
+          "name": "meta.embedded.expression.braceml",
+          "patterns": [
+            {
+              "include": "source.js"
+            }
+          ]
+        }
+      }
+    },
+    "block-keyword": {
+      "begin": "(?:^|(?<=[{};]))\\s*\\b(if|each|await|key|snippet)\\b(?=\\s)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.flow.braceml"
+        }
+      },
+      "end": "(?=\\{)",
+      "contentName": "meta.embedded.expression.braceml",
+      "patterns": [
+        {
+          "match": "\\b(as|then|catch)\\b",
+          "name": "keyword.control.flow.braceml"
+        },
+        {
+          "include": "source.js"
+        }
+      ]
+    },
+    "continuation": {
+      "begin": "\\b(else\\s+if|then|catch)\\b(?=\\s)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.flow.braceml"
+        }
+      },
+      "end": "(?=\\{)",
+      "contentName": "meta.embedded.expression.braceml",
+      "patterns": [
+        {
+          "include": "source.js"
+        }
+      ]
+    },
+    "tag": {
+      "patterns": [
+        {
+          "match": "(?:^|(?<=[{}>]))\\s*\\belse\\b",
+          "name": "keyword.control.flow.braceml"
+        },
+        {
+          "match": "(?<=\\})\\s*\\b(else)\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.control.flow.braceml"
+            }
+          }
+        },
+        {
+          "match": "(?:^|(?<=[{}>]))\\s*\\b([A-Z][\\w]*(?:\\.[A-Z][\\w]*)*)",
+          "captures": {
+            "1": {
+              "name": "support.class.component.braceml"
+            }
+          }
+        },
+        {
+          "match": "(?:^|(?<=[{}>]))\\s*\\b([a-z][\\w:-]*)",
+          "captures": {
+            "1": {
+              "name": "entity.name.tag.braceml"
+            }
+          }
+        }
+      ]
+    },
+    "head": {
+      "patterns": [
+        {
+          "match": "(?<=[\\w\\]\\)])(#)([^\\s.#{}'\"()=>]+)",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.entity.braceml"
+            },
+            "2": {
+              "name": "entity.other.attribute-name.id.braceml"
+            }
+          }
+        },
+        {
+          "match": "(?:(?<=[\\w\\]\\)/])|(?<=^)|(?<=\\s))(\\.)(?!\\.)([^\\s.#{}'\"()=>]+)",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.entity.braceml"
+            },
+            "2": {
+              "name": "entity.other.attribute-name.class.braceml"
+            }
+          }
+        },
+        {
+          "begin": "(\\{)?(\\.\\.\\.)(\\{)?",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.section.embedded.begin.braceml"
+            },
+            "2": {
+              "name": "keyword.operator.spread.braceml"
+            },
+            "3": {
+              "name": "punctuation.section.embedded.begin.braceml"
+            }
+          },
+          "end": "\\}|(?=[\\s>'\"]|$)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.embedded.end.braceml"
+            }
+          },
+          "contentName": "meta.embedded.expression.braceml",
+          "patterns": [
+            {
+              "include": "#js-braces"
+            },
+            {
+              "include": "source.js"
+            }
+          ]
+        },
+        {
+          "begin": "([^\\s=>{}'\"()]+)(=)(\\{)",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.other.attribute-name.braceml"
+            },
+            "2": {
+              "name": "punctuation.separator.key-value.braceml"
+            },
+            "3": {
+              "name": "punctuation.section.embedded.begin.braceml"
+            }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.embedded.end.braceml"
+            }
+          },
+          "contentName": "meta.embedded.expression.braceml",
+          "patterns": [
+            {
+              "include": "#js-braces"
+            },
+            {
+              "include": "source.js"
+            }
+          ]
+        },
+        {
+          "match": "([^\\s=>{}'\"()]+)(=)([^\\s{}'\"()>]+)?",
+          "captures": {
+            "1": {
+              "name": "entity.other.attribute-name.braceml"
+            },
+            "2": {
+              "name": "punctuation.separator.key-value.braceml"
+            },
+            "3": {
+              "name": "string.unquoted.braceml"
+            }
+          }
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "match": "\\{",
+          "name": "punctuation.section.block.begin.braceml"
+        },
+        {
+          "match": "\\}",
+          "name": "punctuation.section.block.end.braceml"
+        },
+        {
+          "match": ">",
+          "name": "punctuation.separator.chain.braceml"
+        },
+        {
+          "match": "[()]",
+          "name": "punctuation.section.group.braceml"
+        }
+      ]
+    }
+  }
+}

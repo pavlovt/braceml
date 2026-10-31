@@ -1,0 +1,44 @@
+{
+  "name": "braceml",
+  "version": "0.1.0",
+  "description": "BraceML - a brace-based HTML template language. Command-line compiler.",
+  "keywords": [
+    "braceml",
+    "template",
+    "html",
+    "template-language",
+    "cli"
+  ],
+  "license": "MIT",
+  "author": "pavlovt",
+  "homepage": "https://github.com/pavlovt/braceml#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavlovt/braceml.git",
+    "directory": "packages/cli"
+  },
+  "bugs": "https://github.com/pavlovt/braceml/issues",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "bin": {
+    "braceml": "./dist/index.js"
+  },
+  "dependencies": {
+    "@braceml/core": "workspace:^",
+    "@braceml/html": "workspace:^",
+    "@braceml/svelte": "workspace:^"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

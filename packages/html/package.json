@@ -1,0 +1,48 @@
+{
+  "name": "@braceml/html",
+  "version": "0.1.0",
+  "description": "Compile BraceML templates to plain HTML",
+  "keywords": [
+    "braceml",
+    "template",
+    "html",
+    "template-language",
+    "html"
+  ],
+  "license": "MIT",
+  "author": "pavlovt",
+  "homepage": "https://github.com/pavlovt/braceml#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavlovt/braceml.git",
+    "directory": "packages/html"
+  },
+  "bugs": "https://github.com/pavlovt/braceml/issues",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@braceml/core": "workspace:^"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

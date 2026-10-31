@@ -1,0 +1,5 @@
+div {
+  button @click="save()" :disabled="busy" 'Vue'
+  button (click)="save()" [disabled]="busy" 'Angular'
+  input [(ngModel)]="name" *ngIf="show"
+}

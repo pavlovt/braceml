@@ -1,0 +1,15 @@
+.row {
+  .col {
+    form {
+      .form-group {
+        label  { 'Email address' }
+        input.form-control type=email placeholder="Enter email" {}
+      }
+      .form-group {
+        label  { 'Password' }
+        input.form-control type=password placeholder=Password {}
+      }
+      button.btn.btn-primary type=submit { 'Submit' }
+    }
+  }
+}

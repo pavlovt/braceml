@@ -1,0 +1,7 @@
+if loading {
+  Spinner size=sm
+} else if users.length == 0 {
+  p.muted 'No users'
+} else {
+  p '{users.length} users'
+}

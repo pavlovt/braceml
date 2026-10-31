@@ -1,0 +1,67 @@
+# BraceML — reference for AI assistants
+
+> BraceML is a brace-based HTML template language. `{ }` wraps an element's children.
+> Text is always quoted. It compiles to HTML and to Svelte 5. Full spec: spec/SPEC.md
+
+## Rules
+
+1. Element: `tag#id.class.class attr=value attr="v" attr={expr}`, followed by ONE of:
+   - `{ children }`
+   - `'text'`: a single text child
+   - `> element`: a single element child
+   - nothing: a void or empty element
+2. The tag defaults to `div`: `.row { }` is `<div class="row">`.
+3. A tag starting with an upper-case letter is a component: `Card title="x"`.
+4. TEXT IS ALWAYS QUOTED. Expressions in text go inside the quotes:
+   `p 'Hello {name}'`. Writing `p {name}` is WRONG.
+5. `{` opens an expression ONLY right after `=` (or as a spread `{...props}`).
+   Anywhere else `{` opens children.
+6. A newline ends an element head. For multi-line attributes use `tag(` ... `)`,
+   with no space before `(`.
+7. Blocks: `if c { } else if d { } else { }`,
+   `each items as item, i (item.id) { } else { }`,
+   `await p { } then v { } catch e { }`, `key x { }`, `snippet name(a) { }`.
+8. Special tags: `@render name(x)`, `@html raw`, `@const y = x * 2`, `@debug x`.
+   Each one runs to the end of the line.
+9. Comments: `// dropped`, `/* kept as <!-- --> */`.
+10. Svelte directives pass through: `bind:value={v}`, `class:on={b}`, `use:act`,
+    `onclick={fn}`.
+
+## Svelte ↔ BraceML
+
+| Svelte                                   | BraceML                              |
+|------------------------------------------|--------------------------------------|
+| `<div class="a b">…</div>`               | `.a.b { … }`                         |
+| `<p>Hi {name}</p>`                       | `p 'Hi {name}'`                      |
+| `<input bind:value={v} />`               | `input bind:value={v}`               |
+| `<li><a href="/">Home</a></li>`          | `li > a href=/ 'Home'`               |
+| `<Card {...props} />`                    | `Card {...props}`                    |
+| `{#if a}…{:else}…{/if}`                  | `if a { … } else { … }`              |
+| `{#each xs as x (x.id)}…{/each}`         | `each xs as x (x.id) { … }`          |
+| `{@render row(x)}`                       | `@render row(x)`                     |
+| text after an element: `<label><input> Name</label>` | `label {` / `input` / `' Name'` / `}` (separate lines) |
+
+## In a .svelte file
+
+```svelte
+<script lang="ts">
+  let { items } = $props();
+</script>
+
+<template lang="braceml">
+  ul {
+    each items as item (item.id) {
+      li '{item.name}'
+    }
+  }
+</template>
+```
+
+## Common mistakes
+
+- An unquoted text or expression child (`p {x}`). Quote it: `p '{x}'`.
+- Two bodies on one element (`p 'a' { }`). Use a children block with two text nodes.
+- A dot inside a selector class (`.w-1.5`). Use `class="w-1.5"`.
+- A space before a multi-line group (`input (`). Write `input(`.
+- Text on the same line as an element becomes that element's body: `input ' Name'` is an error.
+  Put sibling text on its own line.
