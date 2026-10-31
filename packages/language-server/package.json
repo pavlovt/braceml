@@ -1,6 +1,6 @@
 {
   "name": "@braceml/language-server",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "BraceML language server: diagnostics, completion and hover for .braceml files and Svelte template blocks",
   "keywords": [
     "braceml",
