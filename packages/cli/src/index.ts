@@ -51,6 +51,18 @@ function output(text: string): void {
   else process.stdout.write(text);
 }
 
+/** An error to print as-is, without a stack trace. */
+class CliError extends Error {}
+
+function read(file: string): string {
+  try {
+    return readFileSync(file, 'utf8');
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') throw new CliError(`Can't read '${file}': file not found.`);
+    throw err;
+  }
+}
+
 function formatFiles(files: string[]): number {
   let unformatted = 0;
   for (const file of files) {
@@ -59,7 +71,7 @@ function formatFiles(files: string[]): number {
       console.error(`Can't format '${file}'. Use a .braceml, .svelte, .jsx or .tsx file.`);
       return 1;
     }
-    const text = readFileSync(file, 'utf8');
+    const text = read(file);
     const formatted = formatTemplates(text, kind, { filename: file });
     if (formatted === text) continue;
     if (values.check) {
@@ -80,7 +92,7 @@ function compile(file: string): number {
     console.error(`Unknown target '${values.target}'. Use html, svelte or react.`);
     return 1;
   }
-  output(compilers[target](readFileSync(file, 'utf8'), { filename: file }));
+  output(compilers[target](read(file), { filename: file }));
   return 0;
 }
 
@@ -96,7 +108,7 @@ function main(): number {
   const [command, ...rest] = positionals;
   if (command === 'fmt' && rest.length > 0) return formatFiles(rest);
   if (command === 'convert' && rest.length === 1) {
-    output(htmlToBraceml(readFileSync(rest[0], 'utf8'), { classAttribute: values['class-attribute'] }));
+    output(htmlToBraceml(read(rest[0]), { classAttribute: values['class-attribute'] }));
     return 0;
   }
   if (command === 'agents' && rest.length <= 1) return agents(rest[0]);
@@ -108,7 +120,7 @@ function main(): number {
 try {
   process.exitCode = values.help ? (process.stdout.write(HELP), 0) : main();
 } catch (err) {
-  if (!(err instanceof BraceMLError)) throw err;
+  if (!(err instanceof BraceMLError || err instanceof CliError)) throw err;
   console.error(err.message);
   process.exitCode = 1;
 }
