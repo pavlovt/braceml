@@ -1,5 +1,11 @@
 # @braceml/svelte
 
+## 0.4.0
+
+### Patch Changes
+
+- @braceml/core@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes
