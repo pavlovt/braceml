@@ -284,6 +284,20 @@ npx @braceml/cli convert page.html -o page.braceml
 `fmt` formats `.braceml` files and the templates in `.svelte`, `.jsx` and `.tsx` files. For
 Tailwind projects, add `--class-attribute` to `convert`.
 
+## AI coding agents
+
+Models have not seen much BraceML, so give your coding agent the reference. Most agents
+(Codex, Cursor, Copilot, Gemini CLI, Zed and others) read an [`AGENTS.md`](https://agents.md/)
+file at the project root. This adds the BraceML reference to it, creating the file if needed:
+
+```sh
+npx @braceml/cli agents
+```
+
+The reference sits between `<!-- braceml:start -->` and `<!-- braceml:end -->`, so your own
+instructions stay untouched and running the command again updates it. For Claude Code, add
+`@AGENTS.md` to your `CLAUDE.md`. The same text is in [docs/llms.txt](docs/llms.txt).
+
 ## Examples
 
 | Example | What it shows |

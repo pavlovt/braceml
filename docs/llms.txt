@@ -1,7 +1,8 @@
 # BraceML — reference for AI assistants
 
 > BraceML is a brace-based HTML template language. `{ }` wraps an element's children.
-> Text is always quoted. It compiles to HTML, Svelte 5 and React. Full spec: docs/language.md
+> Text is always quoted. It compiles to HTML, Svelte 5 and React. Full spec:
+> https://github.com/pavlovt/braceml/blob/main/docs/language.md
 
 ## Rules
 

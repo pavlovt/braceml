@@ -1,15 +1,17 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 import { BraceMLError, fileKind, formatTemplates } from '@braceml/core';
 import { htmlToBraceml } from '@braceml/convert';
 import { compileHtml } from '@braceml/html';
 import { compileReact } from '@braceml/react/compiler';
 import { compileSvelte } from '@braceml/svelte';
+import { updateAgents } from './agents.js';
 
 const HELP = `Usage: braceml <file.braceml> [options]
        braceml fmt <files...> [--check]
        braceml convert <file.html> [options]
+       braceml agents [file]              Add the BraceML reference to AGENTS.md
 
 Compile options:
   -t, --target <html|svelte|react>   Output target (default: html)
@@ -82,6 +84,14 @@ function compile(file: string): number {
   return 0;
 }
 
+function agents(file = 'AGENTS.md'): number {
+  const reference = readFileSync(new URL('./llms.txt', import.meta.url), 'utf8');
+  const existing = existsSync(file) ? readFileSync(file, 'utf8') : undefined;
+  writeFileSync(file, updateAgents(existing, reference));
+  console.log(`${existing === undefined ? 'Created' : 'Updated'} ${file}`);
+  return 0;
+}
+
 function main(): number {
   const [command, ...rest] = positionals;
   if (command === 'fmt' && rest.length > 0) return formatFiles(rest);
@@ -89,7 +99,8 @@ function main(): number {
     output(htmlToBraceml(readFileSync(rest[0], 'utf8'), { classAttribute: values['class-attribute'] }));
     return 0;
   }
-  if (positionals.length === 1 && command !== 'fmt' && command !== 'convert') return compile(command);
+  if (command === 'agents' && rest.length <= 1) return agents(rest[0]);
+  if (positionals.length === 1 && !['fmt', 'convert', 'agents'].includes(command)) return compile(command);
   process.stdout.write(HELP);
   return values.help ? 0 : 1;
 }

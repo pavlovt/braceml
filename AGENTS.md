@@ -3,13 +3,15 @@
 - `pnpm test` runs everything; `pnpm fixtures:update` regenerates spec/fixtures expected outputs (review the diff).
 - Language changes: update docs/language.md, add a fixture, then the parser in packages/core/src/parser.ts.
 - Targets print the AST; html and svelte share packages/core/src/printer.ts.
-- Keep docs/llms.txt in sync with the spec.
+- Keep docs/llms.txt in sync with the spec, then run `pnpm agents:update` to copy it below.
 - The image at the top of the README comes from docs/images/example.braceml: run `pnpm readme:image` after changing it.
 
+<!-- braceml:start -->
 # BraceML — reference for AI assistants
 
 > BraceML is a brace-based HTML template language. `{ }` wraps an element's children.
-> Text is always quoted. It compiles to HTML, Svelte 5 and React. Full spec: docs/language.md
+> Text is always quoted. It compiles to HTML, Svelte 5 and React. Full spec:
+> https://github.com/pavlovt/braceml/blob/main/docs/language.md
 
 ## Rules
 
@@ -93,3 +95,4 @@ write `onClick`. `bind:value` is an error: use `value={v} onchange={fn}`.
 - A space before a multi-line group (`input (`). Write `input(`.
 - Text on the same line as an element becomes that element's body: `input ' Name'` is an error.
   Put sibling text on its own line.
+<!-- braceml:end -->

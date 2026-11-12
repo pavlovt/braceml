@@ -9,6 +9,7 @@
     "test:watch": "vitest",
     "fixtures:update": "tsx scripts/update-fixtures.ts",
     "readme:image": "tsx scripts/render-example.ts",
+    "agents:update": "pnpm --filter @braceml/cli build && node packages/cli/dist/index.js agents",
     "typecheck": "tsc --noEmit",
     "changeset": "changeset",
     "release": "pnpm build && changeset publish"
