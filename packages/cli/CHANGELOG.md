@@ -1,5 +1,19 @@
 # braceml
 
+## 0.4.0
+
+### Minor Changes
+
+- 421ebfa: Add `braceml agents`, which writes the BraceML reference for AI assistants into the project's AGENTS.md (https://agents.md/).
+
+### Patch Changes
+
+- @braceml/convert@0.4.0
+  - @braceml/core@0.4.0
+  - @braceml/html@0.4.0
+  - @braceml/react@0.4.0
+  - @braceml/svelte@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes
