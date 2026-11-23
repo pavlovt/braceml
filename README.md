@@ -1,4 +1,4 @@
-# BraceML
+<img src="docs/images/banner.png" alt="BraceML: a brace-based template language with no closing tags" width="100%">
 
 **HTML templates without the boilerplate.** BraceML is a brace-based template language.
 `{ }` wraps an element's children, the way SCSS wraps CSS rules. It compiles to plain
