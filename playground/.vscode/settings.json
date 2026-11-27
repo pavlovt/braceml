@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  // every route uses a BraceML template, which the Svelte extension can't parse (docs/svelte.md)
+  "svelte.plugin.typescript.diagnostics.enable": false
+}

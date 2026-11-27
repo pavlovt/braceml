@@ -26,3 +26,5 @@ jobs:
         run: pnpm --filter braceml-example-sveltekit build
       - name: Build todo examples
         run: pnpm --filter "braceml-example-todo-*" build
+      - name: Build the playground
+        run: pnpm --filter braceml-playground build
