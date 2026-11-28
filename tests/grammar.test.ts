@@ -165,6 +165,13 @@ describe('TextMate grammar', () => {
     expect(tokens.some(([t, s]) => t === 'Hello' && s === 'string.quoted.single.braceml')).toBe(true);
   });
 
+  it('highlights an attachment in an element head, not a children block', async () => {
+    const tokens = await tokenize(["div {@attach tooltip('hi')} 'x'"]);
+    const scopeOf = (text: string) => tokens.find(([t]) => t === text)?.[1];
+    expect(scopeOf('attach')).toBe('keyword.control.braceml');
+    expect(tokens.some(([t, s]) => t === 'x' && s === 'string.quoted.single.braceml')).toBe(true);
+  });
+
   it('highlights keywords that continue a block after }', async () => {
     const tokens = await tokenize([
       'if a {',

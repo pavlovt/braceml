@@ -228,6 +228,35 @@
           }
         },
         {
+          "begin": "(\\{)\\s*(@)(attach)\\b",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.section.embedded.begin.braceml"
+            },
+            "2": {
+              "name": "punctuation.definition.keyword.braceml"
+            },
+            "3": {
+              "name": "keyword.control.braceml"
+            }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.embedded.end.braceml"
+            }
+          },
+          "contentName": "meta.embedded.expression.braceml",
+          "patterns": [
+            {
+              "include": "#js-braces"
+            },
+            {
+              "include": "source.js"
+            }
+          ]
+        },
+        {
           "begin": "(\\{)?(\\.\\.\\.)(\\{)?",
           "beginCaptures": {
             "1": {

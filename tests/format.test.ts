@@ -31,6 +31,12 @@ describe('format', () => {
     );
   });
 
+  it('keeps attachments in the head, on one line or in a group', () => {
+    expect(format(`div   {@attach a}  {@attach b(1)} 'x'`)).toBe(`div {@attach a} {@attach b(1)} 'x'\n`);
+    const grouped = `canvas(\n  width=320\n  {@attach draw}\n)\n`;
+    expect(format(grouped)).toBe(grouped);
+  });
+
   it('keeps comments, blank lines, quotes and short bodies', () => {
     const source = [
       '// top',

@@ -324,6 +324,7 @@ Projects that write their templates in BraceML:
 - [Using BraceML with Svelte](docs/svelte.md)
 - [Using BraceML with React](docs/react.md)
 - [Guide for AI assistants](docs/llms.txt)
+- [Svelte and SvelteKit support roadmap](docs/roadmap.md)
 
 ## Roadmap
 

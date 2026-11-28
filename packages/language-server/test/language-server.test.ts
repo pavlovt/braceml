@@ -105,6 +105,8 @@ describe('cursor context', () => {
     ['input(\n  type=text\n  |', 'attribute'],
     ['a href=/ tar|', 'attribute'],
     ['Card {...props} |', 'attribute'],
+    ['div {@attach tip(x)} |', 'attribute'],
+    ['div {@attach |', 'none'],
     ['input type=|', 'value'],
     ['input type="|', 'value'],
     ["p 'hello |", 'none'],
@@ -171,7 +173,7 @@ describe('completion', () => {
 
   it('offers attributes for the element', () => {
     const items = labels('input |');
-    expect(items).toEqual(expect.arrayContaining(['type', 'class', 'onclick', 'bind:value']));
+    expect(items).toEqual(expect.arrayContaining(['type', 'class', 'onclick', 'bind:value', '{@attach}']));
     expect(labels('a |')).not.toContain('type');
   });
 

@@ -376,7 +376,7 @@ class JsxPrinter {
     ];
   }
 
-  private attributeName(el: ElementNode, a: Exclude<Attribute, { kind: 'spread' }>): string {
+  private attributeName(el: ElementNode, a: Extract<Attribute, { name: string }>): string {
     const { name } = a;
     const colon = name.indexOf(':');
     if (colon !== -1 && !(name in ATTRIBUTE_NAMES)) {
@@ -395,7 +395,7 @@ class JsxPrinter {
     const items: string[] = [];
     let statics = el.classes.join(' ');
     for (const a of attrs) {
-      if (a.kind === 'spread') continue;
+      if (!('name' in a)) continue;
       if (a.name === 'class') {
         if (a.kind === 'expression') items.push(a.expression);
         else if (a.value?.includes('{')) items.push(interpolate(a.value));
@@ -424,7 +424,7 @@ class JsxPrinter {
     let found = false;
 
     for (const a of attrs) {
-      if (a.kind === 'spread') continue;
+      if (!('name' in a)) continue;
       if (a.name === 'style') {
         found = true;
         if (a.kind === 'expression') whole = a.expression;
@@ -451,7 +451,9 @@ class JsxPrinter {
   private printAttributes(el: ElementNode, key: string | null, html: string | null): string {
     const parts: string[] = [];
     const attrs = el.attributes;
-    const hasKey = attrs.some((a) => a.kind !== 'spread' && a.name === 'key');
+    const attach = attrs.find((a) => a.kind === 'attach');
+    if (attach) this.fail("'{@attach}' is not supported by the 'react' target", attach.loc.start);
+    const hasKey = attrs.some((a) => 'name' in a && a.name === 'key');
     if (key !== null && !hasKey) parts.push(`key={${key}}`);
     if (el.id !== null) parts.push(`id=${quoteAttr(el.id)}`);
 
@@ -465,6 +467,7 @@ class JsxPrinter {
         parts.push(`{...${a.expression}}`);
         continue;
       }
+      if (a.kind === 'attach') continue;
       if (a.name === 'class' || a.name.startsWith('class:')) continue;
       if (a.name === 'style' || a.name.startsWith('style:')) continue;
       if (a.name === 'bind:this') {

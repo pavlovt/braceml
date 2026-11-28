@@ -90,6 +90,8 @@ p 'Hello <strong>{name}</strong>,&nbsp;welcome.'
 ### Braces mean one thing
 
 A `{` opens an expression only right after `=` or `...`. Anywhere else it opens children.
+The two Svelte forms `{...props}` and `{@attach fn}` are the exceptions, because a children
+block can't start with `...` or `@attach`.
 
 ```svelte braceml
 button onclick={save} { 'Save' }
@@ -359,11 +361,21 @@ Attributes follow the selector and are separated by whitespace.
 | `disabled`              | Boolean attribute.                                 |
 | `onclick={save}`        | Expression. The braces are balanced and JS strings are respected. |
 | `...props`, `...{a}`, `{...props}` | Spread. The Svelte form `{...props}` is accepted because a children block can never start with `...`. |
+| `{@attach tooltip(text)}` | Attachment (Svelte 5.29). An element may have several. Svelte target only. |
 | `bind:value={x}`, `class:active={on}`, `use:tooltip` | Directives are passed to the target. |
 | `@click="go"`, `:title="t"`, `[value]="v"`, `(click)="go()"` | Framework attributes (Vue/Angular) are passed through unchanged. |
 
 The rule that removes ambiguity: **`{` opens an expression only directly after `=`
-(or after `...`). Anywhere else in a head, `{` opens the children block.**
+(or after `...`). Anywhere else in a head, `{` opens the children block**, unless it is
+followed by `...` (a spread) or `@attach` (an attachment).
+
+```svelte braceml
+canvas(
+  width=320
+  {@attach draw}
+  {@attach resize(opts)}
+)
+```
 
 The class attribute is merged with the selector classes, so `.a class="b"` becomes
 `class="a b"`.

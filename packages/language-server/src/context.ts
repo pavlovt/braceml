@@ -152,7 +152,8 @@ class Scanner {
       } else if (c === '\n' || c === '\r' || c === '}') {
         return null;
       } else if (c === '{') {
-        if (!s.startsWith('...', this.i + 1)) {
+        // `{...props}` and `{@attach fn}` belong to the head; any other `{` opens the children
+        if (!/^\{\s*(?:\.\.\.|@attach(?![\w$]))/.test(s.slice(this.i, this.i + 16))) {
           this.i++;
           return null;
         }

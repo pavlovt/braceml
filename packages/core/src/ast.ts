@@ -18,7 +18,9 @@ export type Node =
 export type Attribute =
   | { kind: 'static'; name: string; value: string | null; loc: Loc }
   | { kind: 'expression'; name: string; expression: string; loc: Loc }
-  | { kind: 'spread'; expression: string; loc: Loc };
+  | { kind: 'spread'; expression: string; loc: Loc }
+  /** Svelte attachment `{@attach expression}` */
+  | { kind: 'attach'; expression: string; loc: Loc };
 
 export interface ElementNode {
   type: 'Element';

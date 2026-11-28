@@ -208,6 +208,12 @@ Spread props with `{...props}`:
 Card {...props}
 ```
 
+Attachments (Svelte 5.29) go in the head in the same form as in Svelte:
+
+```svelte braceml
+div {@attach tooltip(text)} 'Hover me'
+```
+
 ### Blocks
 
 | Svelte                                     | BraceML                          |
@@ -324,7 +330,7 @@ spelled correctly.
 **A prop turned into a child element.** Svelte's `{title}` shorthand doesn't work on an
 element head, because `{` opens the children block there. `Card {title}` compiles without
 an error to a `Card` containing an empty `<title>`. Write `Card title={title}`. The spread
-`{...props}` is the one exception.
+`{...props}` and the attachment `{@attach fn}` are the only exceptions.
 
 **`input ' Name'` is an error.** Void elements can't have a body. Put the text on its own
 line:

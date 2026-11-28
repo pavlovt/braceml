@@ -25,8 +25,8 @@
 3. A tag starting with an upper-case letter is a component: `Card title="x"`.
 4. TEXT IS ALWAYS QUOTED. Expressions in text go inside the quotes:
    `p 'Hello {name}'`. Writing `p {name}` is WRONG.
-5. `{` opens an expression ONLY right after `=` (or as a spread `{...props}`).
-   Anywhere else `{` opens children.
+5. `{` opens an expression ONLY right after `=` (or as a spread `{...props}`, or an
+   attachment `{@attach fn}`). Anywhere else `{` opens children.
 6. A newline ends an element head. For multi-line attributes use `tag(` ... `)`,
    with no space before `(`.
 7. Blocks: `if c { } else if d { } else { }`,
@@ -47,6 +47,7 @@
 | `<input bind:value={v} />`               | `input bind:value={v}`               |
 | `<li><a href="/">Home</a></li>`          | `li > a href=/ 'Home'`               |
 | `<Card {...props} />`                    | `Card {...props}`                    |
+| `<div {@attach tip(x)}>…</div>`          | `div {@attach tip(x)} { … }`         |
 | `{#if a}…{:else}…{/if}`                  | `if a { … } else { … }`              |
 | `{#each xs as x (x.id)}…{/each}`         | `each xs as x (x.id) { … }`          |
 | `{@render row(x)}`                       | `@render row(x)`                     |

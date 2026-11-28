@@ -569,6 +569,14 @@ class Parser {
         el.attributes.push({ kind: 'spread', expression: inner, loc: { start, end: this.pos } });
         continue;
       }
+      if (c === '{' && /^\{\s*@attach(?![\w$])/.test(this.src.slice(this.pos, this.pos + 16))) {
+        // Svelte attachment `{@attach fn}`: a children block can never start with `@attach`
+        const start = this.pos;
+        const expression = this.readBracedExpression().replace(/^@attach/, '').trim();
+        if (!expression) this.error("Expected an expression after '@attach'", start);
+        el.attributes.push({ kind: 'attach', expression, loc: { start, end: this.pos } });
+        continue;
+      }
       if (c === '{') {
         if (grouped) this.error("Missing ')' before the children block", groupOpen);
         el.children = this.parseBlockBody();

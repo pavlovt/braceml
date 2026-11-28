@@ -102,6 +102,7 @@ export const DIRECTIVES: { label: string; snippet: string }[] = [
   { label: 'style:', snippet: 'style:${1:property}={$2}' },
   { label: 'use:', snippet: 'use:${1:action}' },
   { label: 'transition:', snippet: 'transition:${1:name}' },
+  { label: '{@attach}', snippet: '{@attach ${1:fn}}' },
 ];
 
 export const ATTRIBUTE_VALUES: Record<string, string[]> = {

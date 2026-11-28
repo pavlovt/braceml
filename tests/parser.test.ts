@@ -36,6 +36,13 @@ describe('expressions', () => {
     expect(out).toBe('<div title={`a ${ {b: "}"}.b }`}>x</div>\n');
   });
 
+  it('reads {@attach} as an attribute and keeps `{ @attachment }` a children block', () => {
+    const [el] = parse("div {@attach a('}')} 'x'").children;
+    expect(el).toMatchObject({ attributes: [{ kind: 'attach', expression: "a('}')" }], children: [{ value: 'x' }] });
+    expect(() => parse('div {@attach}')).toThrow("Expected an expression after '@attach'");
+    expect(() => parse('div { @attachment x }')).toThrow("Unknown special tag '@attachment'");
+  });
+
   it('allows object literals inside parentheses in block headers', () => {
     const out = compileSvelte("if check({ a: 1 }) { p 'y' }");
     expect(out).toContain('{#if check({ a: 1 })}');

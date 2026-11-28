@@ -128,7 +128,7 @@ class MarkupPrinter {
     if (el.id !== null) parts.push(`id="${escapeAttr(el.id)}"`);
 
     // merge selector classes with a `class` attribute
-    const classIdx = attrs.findIndex((a) => a.kind !== 'spread' && a.name === 'class');
+    const classIdx = attrs.findIndex((a) => 'name' in a && a.name === 'class');
     if (el.classes.length || classIdx !== -1) {
       const merged = [...el.classes];
       if (classIdx !== -1) {
@@ -147,6 +147,9 @@ class MarkupPrinter {
       if (a.kind === 'spread') {
         this.svelteOnly('A spread attribute', a.loc.start);
         parts.push(`{...${a.expression}}`);
+      } else if (a.kind === 'attach') {
+        this.svelteOnly("'{@attach}'", a.loc.start);
+        parts.push(`{@attach ${a.expression}}`);
       } else if (a.kind === 'expression') {
         this.svelteOnly('An {expression} attribute value', a.loc.start);
         parts.push(`${a.name}={${a.expression}}`);
