@@ -1,5 +1,16 @@
 # @braceml/react
 
+## 0.5.0
+
+### Minor Changes
+
+- f0b7d21: Support Svelte attachments: `div {@attach tooltip(text)}` in an element head, several per element and inside `tag(` … `)`. The html and react targets report them as Svelte-only. The language server offers `{@attach}` as an attribute.
+
+### Patch Changes
+
+- Updated dependencies [f0b7d21]
+  - @braceml/core@0.5.0
+
 ## 0.4.0
 
 ### Patch Changes
