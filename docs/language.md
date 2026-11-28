@@ -13,6 +13,7 @@ setup, see the [Svelte guide](svelte.md) and the [React guide](react.md).
 - [Cookbook](#cookbook)
 - [Common mistakes](#common-mistakes)
 - [Tools](#tools)
+- [Related projects](#related-projects)
 - [Reference](#reference)
 
 ## Quick start
@@ -275,6 +276,19 @@ The Svelte preprocessor and the React Vite plugin both return source maps, so co
 errors, stack traces and breakpoints point at your template. Maps are accurate to the
 line and the start of the element, not to a position inside it. The CLI doesn't write
 source maps.
+
+## Related projects
+
+These projects write their templates in BraceML:
+
+- [BraceML playground](https://pavlovt.github.io/braceml/): the live playground, the HTML
+  converter and this guide, built with SvelteKit.
+- [brace-store](https://github.com/pavlovt/brace-store): a SvelteKit storefront built
+  twice, in BraceML and in HTML, so you can compare them.
+- [brace-cms](https://github.com/pavlovt/brace-cms): a small headless CMS with a SvelteKit
+  admin, a Hono API and SQLite.
+- [Kvesto](https://github.com/pavlovt/kvesto): an open source survey library whose Svelte
+  editor and dashboard are written in BraceML.
 
 ## Reference
 

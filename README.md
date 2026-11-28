@@ -307,6 +307,17 @@ instructions stay untouched and running the command again updates it. For Claude
 | [todo-svelte](examples/todo-svelte) | The same todo app in Svelte |
 | [sveltekit](examples/sveltekit) | A small SvelteKit app |
 
+## Related projects
+
+Projects that write their templates in BraceML:
+
+| Project | What it is |
+|---------|------------|
+| [BraceML playground](https://pavlovt.github.io/braceml/) | The live playground, HTML converter and language guide, in SvelteKit ([source](playground)) |
+| [brace-store](https://github.com/pavlovt/brace-store) | A SvelteKit storefront built twice, in BraceML and in HTML |
+| [brace-cms](https://github.com/pavlovt/brace-cms) | A small headless CMS: SvelteKit admin, Hono API, SQLite |
+| [Kvesto](https://github.com/pavlovt/kvesto) | An open source survey library; its Svelte editor and dashboard use BraceML |
+
 ## Documentation
 
 - [Language guide and reference](docs/language.md)
